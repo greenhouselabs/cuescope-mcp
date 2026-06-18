@@ -1,0 +1,173 @@
+CueScope Source-Available License v1.0
+
+Copyright (c) 2026 Greenhouse Ventures LLC. All rights reserved.
+
+This license governs CueScope and any source code, compiled code,
+documentation, knowledge files, examples, skills, prompts, and related materials
+distributed by Greenhouse Ventures LLC (the "Software").
+
+This is a source-available license. The Software is not open source.
+
+CueScope is published by Greenhouse Ventures LLC under the Greenhouse Labs
+brand.
+
+1. Definitions
+
+"Greenhouse" means Greenhouse Ventures LLC.
+
+"Official Release" means a release of the Software made available by
+Greenhouse through an official Greenhouse-controlled channel, including the
+@greenhouselabs npm scope, greenhouselabs.io, or the Greenhouse-controlled
+GitHub repository for CueScope.
+
+"Internal Use" means use by you, your employees, contractors, agents, and
+affiliates for your own operations or for live-production, broadcast,
+streaming, consulting, or event services you provide to your own clients,
+provided that you do not provide the Software itself as a product, hosted
+service, managed service, package, platform feature, or white-label offering
+for third parties.
+
+"Competing Offering" means any product, service, hosted service, managed
+service, package, MCP server, agent integration, vMix automation tool, vMix
+advisory tool, or substantially similar offering that is marketed or made
+available as a practical substitute for the Software.
+
+2. Permitted Use
+
+Subject to this license, Greenhouse grants you a limited, non-exclusive,
+non-transferable, non-sublicensable license to:
+
+a. download, install, and run Official Releases;
+b. use Official Releases with vMix and MCP-compatible clients for personal,
+   internal, educational, nonprofit, broadcast, streaming, event, consulting,
+   or other commercial live-production workflows;
+c. inspect source code that Greenhouse makes available for security review,
+   verification, learning, debugging, and evaluation;
+d. make private local modifications solely for your own Internal Use; and
+e. make copies reasonably necessary for installation, package-manager caching,
+   backup, archival, internal deployment, and ordinary use of Official
+   Releases.
+
+This license is not revocable except as described in Section 8.
+
+3. Restrictions
+
+You may not, without prior written permission from Greenhouse:
+
+a. redistribute, publish, sell, rent, sublicense, or provide copies of the
+   Software, modified or unmodified, except as necessary for Internal Use;
+b. publish or distribute modified versions, forks, derivative packages,
+   competing builds, or substantial portions of the Software;
+c. use the Software's source code, compiled code, documentation, knowledge
+   files, skills, prompts, examples, or other protected expression, or any
+   substantial portion of them, to create, support, market, or operate a
+   Competing Offering;
+d. offer the Software or a substantial equivalent as a hosted, managed, SaaS,
+   reseller, white-label, embedded, or platform service for third parties;
+e. use the Software, documentation, knowledge files, skills, prompts, examples,
+   or repository contents as training data to train, fine-tune, distill, or
+   improve any machine-learning or artificial-intelligence model, dataset, or
+   retrieval corpus, except for private local indexing used solely with your
+   licensed use of an Official Release;
+f. remove, obscure, or alter copyright, license, attribution, safety, security,
+   or provenance notices;
+g. use "CueScope", "Greenhouse Labs", "Greenhouse Ventures",
+   related logos, marks, package names, domains, or confusingly similar marks
+   except to accurately identify the Software;
+h. bypass, disable, remove, or misrepresent license, safety, mode-gating,
+   security, or provenance mechanisms; or
+i. use the Software to violate law, gain unauthorized access to systems, or
+   expose vMix Web Controller, vMix Call links, passwords, stream keys,
+   credentials, private network details, or production secrets without
+   authorization.
+
+Nothing in this license prohibits independently developed software that does
+not copy or use the Software or any substantial protected expression from it.
+
+4. Source Availability
+
+Greenhouse may make source code available for review through an official
+Greenhouse-controlled repository or source package. Source availability does
+not grant open-source rights and does not permit redistribution, public forks,
+Competing Offerings, or other uses not expressly allowed by this license.
+
+5. Contributions and Feedback
+
+Greenhouse is not obligated to accept contributions. If you submit code,
+documentation, issues, suggestions, patches, examples, feedback, or other
+materials to Greenhouse, you grant Greenhouse a perpetual, worldwide,
+irrevocable, royalty-free license to use, modify, reproduce, distribute,
+sublicense, and commercialize those submissions without obligation to you.
+
+6. Ownership and Trademarks
+
+Greenhouse retains all right, title, and interest in the Software, including
+copyrights, trade secrets, trademarks, branding, documentation, knowledge
+files, architecture, and related intellectual property. No rights are granted
+except those expressly stated in this license.
+
+"CueScope" and "Greenhouse Labs" are trademarks or service
+marks of Greenhouse. This license does not grant trademark rights.
+
+7. Third-Party Software and Materials
+
+Third-party dependencies, data, examples, references, trademarks, and materials
+remain subject to their own licenses and terms. This license does not change
+your rights or obligations under third-party licenses. See NOTICE.md for
+additional attribution and third-party notices.
+
+8. Termination and Cure
+
+Your rights under this license terminate automatically if you violate its
+terms. For a first-time, non-willful violation, Greenhouse may reinstate your
+rights if you fully cure the violation within 30 days after written notice.
+Repeated, willful, competitive, or harmful violations may be terminated without
+reinstatement.
+
+Upon termination, you must stop using the Software and delete all copies under
+your control, except where retention is required by law or ordinary archival
+backup policies.
+
+9. Commercial Licensing
+
+Uses outside this license require prior written permission from Greenhouse.
+Commercial, reseller, embedded, hosted, white-label, integration, partnership,
+or broader redistribution licenses may be available separately.
+
+10. Governing Law and Venue
+
+This license is governed by the laws of the U.S. state in which Greenhouse
+Ventures LLC is organized and applicable U.S. federal law, excluding
+conflict-of-law rules. The state and federal courts located in that state have
+exclusive jurisdiction and venue for disputes arising from this license, except
+that Greenhouse may seek injunctive or equitable relief in any court with
+jurisdiction.
+
+11. Severability
+
+If any part of this license is held unenforceable, the remaining parts remain
+in effect. The unenforceable part will be interpreted or limited to the minimum
+extent necessary to make it enforceable while preserving the original intent as
+closely as possible.
+
+12. No Warranty
+
+The Software is provided "as is" and "as available", without warranties or
+conditions of any kind, express or implied, including warranties of
+merchantability, fitness for a particular purpose, non-infringement, accuracy,
+availability, security, or suitability for live production.
+
+You are responsible for testing the Software before using it in any production,
+broadcast, streaming, recording, or live event environment.
+
+13. Limitation of Liability
+
+To the maximum extent permitted by law, Greenhouse will not be liable for any
+indirect, incidental, special, consequential, exemplary, punitive, or business
+losses, including lost profits, lost revenue, lost data, production failure,
+broadcast interruption, stream interruption, equipment misconfiguration, or
+damage arising from use of or inability to use the Software.
+
+14. Reservation of Rights
+
+All rights not expressly granted are reserved by Greenhouse.

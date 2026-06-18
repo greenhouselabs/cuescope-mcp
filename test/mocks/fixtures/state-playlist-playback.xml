@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>29.0.0.0</version>
+  <edition>HD</edition>
+  <inputs>
+    <input key="{playlist-show-open}" number="1" type="VideoList" title="Show Open Playlist" state="Running" position="12000" duration="90000" muted="False" loop="False" audiobusses="M" selectedIndex="3" meterF1="0.42" meterF2="0.39"></input>
+    <input key="{playlist-main-camera}" number="2" type="Capture" title="Main Camera" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M"></input>
+    <input key="{playlist-sponsor}" number="3" type="Video" title="Sponsor Spot" state="Paused" position="0" duration="30000" muted="False" loop="False" audiobusses="M"></input>
+    <input key="{playlist-end-card}" number="4" type="Image" title="End Card" state="" position="0" duration="0" muted="False" loop="False" audiobusses=""></input>
+  </inputs>
+  <overlays>
+    <overlay number="1"></overlay>
+    <overlay number="2"></overlay>
+    <overlay number="3"></overlay>
+    <overlay number="4">4</overlay>
+  </overlays>
+  <preview>2</preview>
+  <active>1</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording>False</recording>
+  <streaming>True</streaming>
+  <external>False</external>
+  <audio>
+    <master volume="100" muted="False"/>
+  </audio>
+</vmix>

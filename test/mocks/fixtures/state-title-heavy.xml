@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>29.0.0.0</version>
+  <edition>4K Plus</edition>
+  <inputs>
+    <input key="{title-camera}" number="1" type="Capture" title="Program Camera" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M"></input>
+    <input key="{title-lower-third}" number="2" type="GT" title="Lower Third Package" state="" position="0" duration="0" muted="False" loop="False" audiobusses="">
+      <text name="Name.Text">Alex Producer</text>
+      <text name="Title.Text">Executive Producer</text>
+      <image name="Headshot.Source">C:\Graphics\alex.png</image>
+    </input>
+    <input key="{title-scorebug}" number="3" type="GT" title="Scorebug Package" state="" position="0" duration="0" muted="False" loop="False" audiobusses="">
+      <text name="Home.Name">Hawks</text>
+      <text name="Away.Name">Bears</text>
+      <text name="Home.Score">3</text>
+      <text name="Away.Score">2</text>
+    </input>
+    <input key="{title-fullscreen}" number="4" type="Title" title="Full Screen Topic" state="" position="0" duration="0" muted="False" loop="False" audiobusses="">
+      <text name="Headline.Text">Election Results</text>
+      <text name="Subheadline.Text">County-by-county analysis</text>
+    </input>
+    <input key="{title-ticker}" number="5" type="Xaml" title="Ticker" state="" position="0" duration="0" muted="False" loop="True" audiobusses="">
+      <text name="Ticker.Text">Breaking: Studio update at the top of the hour</text>
+    </input>
+  </inputs>
+  <overlays>
+    <overlay number="1">2</overlay>
+    <overlay number="2">3</overlay>
+    <overlay number="3">5</overlay>
+    <overlay number="4"></overlay>
+  </overlays>
+  <preview>4</preview>
+  <active>1</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording>True</recording>
+  <streaming>False</streaming>
+  <external>False</external>
+  <audio>
+    <master volume="100" muted="False"/>
+  </audio>
+</vmix>

@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+
+# Build output
+build/
+dist/
+
+# Generated build metadata (git short SHA stamped in at build time)
+src/generated/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local assistant/client config
+.agents/
+.claude/settings.local.json
+.claude/knowledge_base/
+.codex/
+
+# Internal/private project notes and legacy archives
+.internal/
+INTERNAL.md
+BUILD-PLAN.md
+vmix-mcp-documentation/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Temporary files
+tmp/
+temp/
+nul
+
+# Package artifacts
+*.tgz
+
+# Real vMix presets used for local development (contain live secrets:
+# Google API keys, stream keys, vMix Call passwords). Sanitized test
+# fixtures under test/mocks/fixtures/ are committed separately.
+docs/*.vmix
+
+# Raw local script drops used for ingestion. Curated, sanitized examples live
+# under knowledge/examples/scripts/real-world/.
+docs/Sample VB Scripts/

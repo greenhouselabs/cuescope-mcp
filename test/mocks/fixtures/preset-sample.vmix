@@ -1,0 +1,37 @@
+<XML>
+  <Version>9</Version>
+  <Input Type="22" Title="Mix 1 1-Up" Key="8e211845-684d-43cd-b5af-cabb00e4a00f" Loop="False" Triggers="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ArrayOfInputTrigger xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;&lt;InputTrigger&gt;&lt;Value&gt;Mix 1 Audio In&lt;/Value&gt;&lt;Function&gt;ScriptStart&lt;/Function&gt;&lt;Duration&gt;500&lt;/Duration&gt;&lt;Input&gt;&lt;Key&gt;00000000-0000-0000-0000-000000000000&lt;/Key&gt;&lt;Number&gt;0&lt;/Number&gt;&lt;/Input&gt;&lt;Mix&gt;1&lt;/Mix&gt;&lt;Delay&gt;0&lt;/Delay&gt;&lt;Trigger&gt;OnTransitionIn&lt;/Trigger&gt;&lt;/InputTrigger&gt;&lt;InputTrigger&gt;&lt;Value&gt;Menu Merge&lt;/Value&gt;&lt;Function&gt;ScriptStart&lt;/Function&gt;&lt;Duration&gt;500&lt;/Duration&gt;&lt;Input&gt;&lt;Key&gt;00000000-0000-0000-0000-000000000000&lt;/Key&gt;&lt;Number&gt;0&lt;/Number&gt;&lt;/Input&gt;&lt;Mix&gt;1&lt;/Mix&gt;&lt;Delay&gt;0&lt;/Delay&gt;&lt;Trigger&gt;OnTransitionIn&lt;/Trigger&gt;&lt;/InputTrigger&gt;&lt;/ArrayOfInputTrigger&gt;"></Input>
+  <Input Type="0" Title="Camera 1" Key="11111111-1111-1111-1111-111111111111" Loop="False" Triggers="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ArrayOfInputTrigger /&gt;"></Input>
+  <Input Type="2" Title="Lower Third" Key="22222222-2222-2222-2222-222222222222" Loop="False" Triggers="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ArrayOfInputTrigger /&gt;"></Input>
+  <Scripting>
+    <ArrayOfScript xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Script><Code>API.Function(&quot;AudioBusOn&quot;, Input:=&quot;Mix 1&quot;, Value:=&quot;A&quot;)</Code><Name>Mix 1 Audio In</Name></Script>
+      <Script><Code>Do While True
+  Sleep(100)
+Loop</Code><Name>Poller</Name></Script>
+      <Script><Code>Dim a As String = &quot;x&quot; &amp; &quot;y&quot;
+API.Function(&quot;SetText&quot;, Input:=“Title”, Value:=&quot;Hi&quot;)</Code><Name>Cold Open</Name></Script>
+    </ArrayOfScript>
+  </Scripting>
+  <DataSources>
+    <datasources>
+      <datasource friendlyName="Google Sheets">
+        <instance id="a29e8ddd-fa9e-4b3c-89d9-ef197f156e4f" title="">
+          <tables>
+            <table name="Menu" index="0"><autoNext enabled="False" interval="5" loop="False" /></table>
+            <table name="Lower Thirds" index="2"><autoNext enabled="False" interval="5" loop="False" /></table>
+          </tables>
+          <state><xml><Google_API_Key>FAKE_API_KEY</Google_API_Key><FirstRowColumnNames>True</FirstRowColumnNames><url>https://docs.google.com/spreadsheets/d/FAKE_SHEET_ID</url></xml></state>
+          <timer>5000</timer><paused>False</paused>
+        </instance>
+      </datasource>
+      <datasource friendlyName="XML">
+        <instance id="5c0c22ce-76fe-4ce6-ad6d-0637269448ea" title="">
+          <tables><table name="XML" index="0"><autoNext enabled="False" interval="5" loop="True" /></table></tables>
+          <state><xml><XPath>/vmix/inputs/input</XPath><url>http://example.local/api</url></xml></state>
+          <timer>5000</timer><paused>False</paused>
+        </instance>
+      </datasource>
+    </datasources>
+  </DataSources>
+</XML>

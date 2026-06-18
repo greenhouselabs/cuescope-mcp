@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>29.0.0.0</version>
+  <edition>4K</edition>
+  <inputs>
+    <input key="{paired-video-skatercross}" number="1" type="Video" title="Skate Event - Skatercross.mp4" state="Running" position="5736000" duration="6960000" muted="True" loop="True" audiobusses="A" meterF1="0" meterF2="0"></input>
+    <input key="{paired-video-bowljam}" number="2" type="Video" title="Skate Event - Bowl Jam.mp4" state="Running" position="120000" duration="5400000" muted="True" loop="True" audiobusses="B" meterF1="0" meterF2="0"></input>
+    <input key="{paired-video-streetjam}" number="3" type="Video" title="Skate Event - Street Jam.mp4" state="Running" position="180000" duration="4800000" muted="True" loop="True" audiobusses="C" meterF1="0" meterF2="0"></input>
+    <input key="{paired-video-vertjam}" number="4" type="Video" title="Skate Event - Vert Jam.mp4" state="Running" position="1542000" duration="5243000" muted="True" loop="True" audiobusses="D,G" meterF1="0" meterF2="0"></input>
+    <input key="{paired-timer-1}" number="5" type="GT" title="Timer Centre.gtzip" state="Paused" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+      <text index="0" name="Time.Text">{0:hh:mm:ss tt}</text>
+    </input>
+    <input key="{paired-timer-2}" number="6" type="GT" title="Timer Centre.gtzip" state="Paused" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+      <text index="0" name="Time.Text">{0:hh:mm:ss tt}</text>
+    </input>
+    <input key="{paired-timer-3}" number="7" type="GT" title="Timer Centre.gtzip" state="Paused" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+      <text index="0" name="Time.Text">{0:hh:mm:ss tt}</text>
+    </input>
+    <input key="{paired-timer-4}" number="8" type="GT" title="Timer Centre.gtzip" state="Paused" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+      <text index="0" name="Time.Text">{0:hh:mm:ss tt}</text>
+    </input>
+    <input key="{paired-music-a}" number="9" type="Audio" title="Music Bed A.mp3" state="Paused" position="0" duration="210000" muted="False" loop="False" audiobusses="A" meterF1="0" meterF2="0"></input>
+    <input key="{paired-music-b}" number="10" type="Audio" title="Music Bed B.mp3" state="Paused" position="0" duration="210000" muted="False" loop="False" audiobusses="B" meterF1="0" meterF2="0"></input>
+    <input key="{paired-music-c}" number="11" type="Audio" title="Music Bed C.mp3" state="Paused" position="0" duration="210000" muted="False" loop="False" audiobusses="C" meterF1="0" meterF2="0"></input>
+    <input key="{paired-music-d}" number="12" type="Audio" title="Music Bed D.mp3" state="Paused" position="0" duration="210000" muted="False" loop="False" audiobusses="D" meterF1="0" meterF2="0"></input>
+    <input key="{paired-mic}" number="13" type="Audio" title="Production Mic" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M" meterF1="0.00003" meterF2="0.00002"></input>
+    <input key="{paired-desktop}" number="14" type="Capture" title="Desktop Capture" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M"></input>
+  </inputs>
+  <overlays>
+    <overlay number="1"></overlay>
+    <overlay number="2"></overlay>
+    <overlay number="3"></overlay>
+    <overlay number="4"></overlay>
+  </overlays>
+  <preview>4</preview>
+  <active>1</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording>False</recording>
+  <streaming>False</streaming>
+  <external>False</external>
+  <audio>
+    <master volume="100" muted="False"/>
+    <busa volume="100" muted="False"/>
+    <busb volume="100" muted="False"/>
+    <busc volume="100" muted="False"/>
+    <busd volume="100" muted="False"/>
+    <busg volume="100" muted="False"/>
+  </audio>
+</vmix>

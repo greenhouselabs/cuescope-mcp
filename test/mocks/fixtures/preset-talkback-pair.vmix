@@ -1,0 +1,32 @@
+<XML>
+  <Version>9</Version>
+  <Input Type="22" Title="Slot Map" Key="{slot-map-key}" Loop="False" Triggers=""></Input>
+  <Input Type="0" Title="Caller A" Key="{caller-a-key}" Loop="False" Triggers=""></Input>
+  <Input Type="0" Title="Operator Mic" Key="{operator-mic-key}" Loop="False" Triggers=""></Input>
+  <Scripting>
+    <ArrayOfScript xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Script>
+        <Code>Dim doc As New System.Xml.XmlDocument
+doc.LoadXml(API.XML())
+Dim slotMapNode As System.Xml.XmlNode = doc.SelectSingleNode(&quot;//input[@key='{slot-map-key}']&quot;)
+Dim overlayNodes As System.Xml.XmlNodeList = slotMapNode.SelectNodes(&quot;overlay&quot;)
+Dim slotNode As System.Xml.XmlNode = overlayNodes.Item(0)
+Dim callerKey As String = slotNode.Attributes(&quot;key&quot;).Value
+API.Function(&quot;VideoCallAudioSource&quot;, Input:=callerKey, Value:=&quot;E&quot;)
+API.Function(&quot;AudioBusOn&quot;, Input:=&quot;{operator-mic-key}&quot;, Value:=&quot;E&quot;)</Code>
+        <Name>Slot 1 Talkback On</Name>
+      </Script>
+      <Script>
+        <Code>Dim doc As New System.Xml.XmlDocument
+doc.LoadXml(API.XML())
+Dim slotMapNode As System.Xml.XmlNode = doc.SelectSingleNode(&quot;//input[@key='{slot-map-key}']&quot;)
+Dim overlayNodes As System.Xml.XmlNodeList = slotMapNode.SelectNodes(&quot;overlay&quot;)
+Dim slotNode As System.Xml.XmlNode = overlayNodes.Item(0)
+Dim callerKey As String = slotNode.Attributes(&quot;key&quot;).Value
+API.Function(&quot;VideoCallAudioSource&quot;, Input:=callerKey, Value:=&quot;BusA&quot;)
+API.Function(&quot;AudioBusOff&quot;, Input:=&quot;{operator-mic-key}&quot;, Value:=&quot;E&quot;)</Code>
+        <Name>Slot 1 Talkback Off</Name>
+      </Script>
+    </ArrayOfScript>
+  </Scripting>
+</XML>

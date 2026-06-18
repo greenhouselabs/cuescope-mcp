@@ -1,0 +1,36 @@
+# Development files
+src/
+test/
+*.ts
+!*.d.ts
+
+# Config files
+tsconfig.json
+vitest.config.ts
+.eslintrc.cjs
+
+# Documentation (internal)
+INTERNAL.md
+CLAUDE.md
+AGENTS.md
+BUILD-PLAN.md
+.agents/
+.claude/
+.codex/
+.internal/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db
+
+# Reference docs (not needed in package)
+vmix-mcp-documentation/

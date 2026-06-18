@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>28.0.0.49</version>
+  <edition>4K</edition>
+  <inputs>
+    <input key="8e211845-684d-43cd-b5af-cabb00e4a00f" number="1" type="Capture" title="Q&amp;A &quot;Panel&quot; &lt;Live&gt;" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+    </input>
+    <input key="2f5cdca2-3b85-4d23-9c8a-1f9d8b87a111" number="2" type="Capture" title="Cam 1 -> Wide" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+      <overlay index="1" input="3" title="Bug -> Corner" zoom="0.5"></overlay>
+    </input>
+    <input key="3a6dedb3-4c96-4e34-ad9b-2fae9c98b222" number="3" type="GT" title="Lower Third" state="Garbage" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+      <text name="Name.Text">Smith &amp; Jones</text>
+    </input>
+  </inputs>
+  <overlays>
+    <overlay number="1"/>
+    <overlay number="2"/>
+    <overlay number="3"/>
+    <overlay number="4"/>
+  </overlays>
+  <preview>2</preview>
+  <active>1</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording duration="125">True</recording>
+  <streaming channel1="True">True</streaming>
+  <external>False</external>
+  <audio>
+    <master muted="True" volume="75"/>
+    <busA muted="False" volume="60"/>
+  </audio>
+</vmix>

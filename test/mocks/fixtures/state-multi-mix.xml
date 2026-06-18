@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>29.0.0.0</version>
+  <edition>Pro</edition>
+  <inputs>
+    <input key="{multimix-main-camera}" number="1" type="Capture" title="Main Camera" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M"></input>
+    <input key="{multimix-wide-camera}" number="2" type="Capture" title="Wide Camera" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M"></input>
+    <input key="{multimix-replay}" number="3" type="Video" title="Replay Roll-in" state="Paused" position="15000" duration="45000" muted="False" loop="False" audiobusses="M"></input>
+    <input key="{multimix-scorebug}" number="4" type="GT" title="Scorebug" state="" position="0" duration="0" muted="False" loop="False" audiobusses="">
+      <text name="Home.Score">21</text>
+      <text name="Away.Score">17</text>
+      <text name="Clock.Text">12:00</text>
+    </input>
+    <input key="{multimix-mix2}" number="5" type="Mix" title="Mix 2 Clean Feed" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses=""></input>
+  </inputs>
+  <overlays>
+    <overlay number="1">4</overlay>
+    <overlay number="2"></overlay>
+    <overlay number="3"></overlay>
+    <overlay number="4"></overlay>
+  </overlays>
+  <mixes>
+    <mix number="1">
+      <active>1</active>
+      <preview>2</preview>
+    </mix>
+    <mix number="2">
+      <active>3</active>
+      <preview>1</preview>
+    </mix>
+  </mixes>
+  <preview>2</preview>
+  <active>1</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording>False</recording>
+  <streaming>True</streaming>
+  <external>True</external>
+  <audio>
+    <master volume="95" muted="False"/>
+    <busa volume="70" muted="False"/>
+  </audio>
+</vmix>

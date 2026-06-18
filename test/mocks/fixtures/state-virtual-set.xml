@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>29.0.0.0</version>
+  <edition>4K Plus</edition>
+  <inputs>
+    <input key="{virtual-host}" number="1" type="Capture" title="Host Green Screen" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M"></input>
+    <input key="{virtual-guest}" number="2" type="NDI" title="Remote Guest NDI" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M,A"></input>
+    <input key="{virtual-set}" number="3" type="VirtualSet" title="Studio Virtual Set" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="">
+      <layer index="1" input="1" key="{virtual-host}" title="Host Green Screen" zoom="1.15" panX="-0.15" panY="0"/>
+      <layer index="2" input="2" key="{virtual-guest}" title="Remote Guest NDI" zoom="0.8" panX="0.35" panY="0.05"/>
+      <layer index="3" input="4" key="{virtual-title}" title="Virtual Set Lower Third" zoom="1" panX="0" panY="-0.72"/>
+    </input>
+    <input key="{virtual-title}" number="4" type="GT" title="Virtual Set Lower Third" state="" position="0" duration="0" muted="False" loop="False" audiobusses="">
+      <text name="Name.Text">Studio Host</text>
+      <text name="Topic.Text">Morning Update</text>
+    </input>
+  </inputs>
+  <overlays>
+    <overlay number="1">4</overlay>
+    <overlay number="2"></overlay>
+    <overlay number="3"></overlay>
+    <overlay number="4"></overlay>
+  </overlays>
+  <preview>2</preview>
+  <active>3</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording>False</recording>
+  <streaming>False</streaming>
+  <external>False</external>
+  <audio>
+    <master volume="100" muted="False"/>
+    <busa volume="75" muted="False"/>
+  </audio>
+</vmix>

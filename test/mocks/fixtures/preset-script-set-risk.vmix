@@ -1,0 +1,52 @@
+<XML>
+  <Version>9</Version>
+  <Input Type="22" Title="Mix Layouts" Key="{mix-layouts-key}" Loop="False" Triggers=""></Input>
+  <Input Type="0" Title="Guest A" Key="{guest-a-key}" Loop="False" Triggers=""></Input>
+  <Input Type="0" Title="Guest B" Key="{guest-b-key}" Loop="False" Triggers=""></Input>
+  <Scripting>
+    <ArrayOfScript xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Script>
+        <Code>Dim x As New System.Xml.XmlDocument
+x.LoadXml(API.XML())
+Dim NodeList As XmlNodeList = x.SelectSingleNode(&quot;/vmix/inputs/input[@title='Mix Layouts']&quot;).SelectNodes(&quot;overlay&quot;)
+Dim MNumber1 As String = NodeList.Item(0).Attributes.GetNamedItem(&quot;key&quot;).Value
+Dim MNumber2 As String = NodeList.Item(1).Attributes.GetNamedItem(&quot;key&quot;).Value
+Dim MNumber3 As String = NodeList.Item(2).Attributes.GetNamedItem(&quot;key&quot;).Value
+Dim MNumber4 As String = NodeList.Item(3).Attributes.GetNamedItem(&quot;key&quot;).Value
+API.Function(&quot;VideoCallAudioSource&quot;, Input:=MNumber1, Value:=&quot;BusE&quot;)</Code>
+        <Name>Mix 1 Talkback On</Name>
+      </Script>
+      <Script>
+        <Code>Dim x As New System.Xml.XmlDocument
+x.LoadXml(API.XML())
+Dim NodeList As XmlNodeList = x.SelectSingleNode(&quot;/vmix/inputs/input[@title='Mix Layouts']&quot;).SelectNodes(&quot;overlay&quot;)
+Dim MNumber1 As String = NodeList.Item(0).Attributes.GetNamedItem(&quot;key&quot;).Value
+Dim MNumber2 As String = NodeList.Item(1).Attributes.GetNamedItem(&quot;key&quot;).Value
+Dim MNumber3 As String = NodeList.Item(2).Attributes.GetNamedItem(&quot;key&quot;).Value
+Dim MNumber4 As String = NodeList.Item(3).Attributes.GetNamedItem(&quot;key&quot;).Value
+API.Function(&quot;VideoCallAudioSource&quot;, Input:=MNumber1, Value:=&quot;BusA&quot;)</Code>
+        <Name>Mix 1 Talkback Off</Name>
+      </Script>
+      <Script>
+        <Code>Dim AssignedTitle As String = &quot;Host A&quot;
+Select Case AssignedTitle
+    Case &quot;Host A&quot;
+        API.Function(&quot;DataSourceSelectRow&quot;, Value:=&quot;Lower Thirds,1&quot;)
+    Case &quot;Host B&quot;
+        API.Function(&quot;DataSourceSelectRow&quot;, Value:=&quot;Lower Thirds,2&quot;)
+End Select</Code>
+        <Name>Mix 1 Lower Third</Name>
+      </Script>
+      <Script>
+        <Code>Dim AssignedTitle As String = &quot;Host A&quot;
+Select Case AssignedTitle
+    Case &quot;Host A&quot;
+        API.Function(&quot;DataSourceSelectRow&quot;, Value:=&quot;Lower Thirds,1&quot;)
+    Case &quot;Host C&quot;
+        API.Function(&quot;DataSourceSelectRow&quot;, Value:=&quot;Lower Thirds,3&quot;)
+End Select</Code>
+        <Name>Mix 8 Lower Third</Name>
+      </Script>
+    </ArrayOfScript>
+  </Scripting>
+</XML>

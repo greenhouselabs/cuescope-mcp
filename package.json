@@ -1,0 +1,105 @@
+{
+  "name": "@greenhouselabs/cuescope-mcp",
+  "version": "1.0.1",
+  "description": "CueScope: read-first production intelligence, diagnostics, and reviewable automation planning for workflows compatible with vMix",
+  "type": "module",
+  "packageManager": "npm@10.9.8",
+  "main": "build/index.js",
+  "bin": {
+    "cuescope-mcp": "build/index.js"
+  },
+  "scripts": {
+    "prebuild": "node scripts/gen-build-info.mjs",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node build/index.js",
+    "pretest": "node scripts/gen-build-info.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "lint": "eslint src/ test/ scripts/",
+    "lint:fix": "eslint src/ --fix",
+    "generate:functions": "node scripts/generate-function-list.mjs",
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "pretypecheck": "node scripts/gen-build-info.mjs",
+    "typecheck": "tsc --noEmit",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "vmix",
+    "vmix-compatible",
+    "cuescope",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "live-production",
+    "production-intelligence",
+    "broadcast",
+    "streaming",
+    "ai",
+    "claude",
+    "automation",
+    "vbnet",
+    "script-validation",
+    "read-only",
+    "control-mode"
+  ],
+  "author": "Greenhouse Labs",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greenhouselabs/cuescope-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/greenhouselabs/cuescope-mcp/issues"
+  },
+  "homepage": "https://github.com/greenhouselabs/cuescope-mcp#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.60.1",
+    "@typescript-eslint/parser": "^8.60.1",
+    "@vitest/coverage-v8": "^4.1.8",
+    "eslint": "^8.55.0",
+    "typescript": "^5.3.0",
+    "vitest": "^4.1.8",
+    "vmix-function-list": "^27.0.1"
+  },
+  "files": [
+    "build/",
+    "!build/**/*.map",
+    "docs/DESKTOP-INSTALL.md",
+    "docs/MCP-SETUP.md",
+    "knowledge/README.md",
+    "knowledge/examples/README.md",
+    "knowledge/examples/presets/",
+    "knowledge/examples/routing-diagrams/",
+    "knowledge/examples/scripts/*.md",
+    "knowledge/examples/scripts/real-world/README.md",
+    "knowledge/examples/troubleshooting/",
+    "knowledge/examples/xml-snapshots/",
+    "knowledge/forum-digests/",
+    "knowledge/mcp/",
+    "knowledge/official/",
+    "knowledge/patterns/",
+    "skills/",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "DEMO.md",
+    "MIGRATION.md",
+    "NOTICE.md",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md"
+  ]
+}

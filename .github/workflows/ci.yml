@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Node ${{ matrix.node-version }} (ubuntu)
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - 20.x
+          - 22.x
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      # Coverage is collected on a single job only (Node 20) to keep CI cheap.
+      # Enforces the thresholds configured in vitest.config.ts.
+      - name: Test with coverage
+        if: matrix.node-version == '20.x'
+        run: npx vitest run --coverage
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+
+      - name: Validate vMix API references
+        run: node scripts/validate-api-calls.mjs
+
+      - name: Check npm package shape
+        run: npm pack --dry-run --ignore-scripts
+
+  verify-windows:
+    # vMix is Windows-only software: path handling (USERPROFILE, backslash
+    # script paths, clipboard via clip.exe) must keep working on Windows.
+    name: Node 20 (windows)
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+
+      - name: Validate vMix API references
+        run: node scripts/validate-api-calls.mjs
+
+      - name: Check npm package shape
+        run: npm pack --dry-run --ignore-scripts

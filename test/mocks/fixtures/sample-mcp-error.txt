@@ -1,0 +1,2 @@
+2026-06-16T12:34:00.000Z error mcp-server-vmix spawn npx ENOENT
+2026-06-16T12:34:00.001Z info Restarted after launch failure

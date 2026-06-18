@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>29.0.0.0</version>
+  <edition>Pro</edition>
+  <inputs>
+    <input key="{podcast-host-camera}" number="1" type="Capture" title="Host Camera" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M"></input>
+    <input key="{podcast-guest-a}" number="2" type="vMixCall" title="Guest A Call" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M,A"></input>
+    <input key="{podcast-guest-b}" number="3" type="vMixCall" title="Guest B Call" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M,B"></input>
+    <input key="{podcast-quad}" number="4" type="Colour" title="Podcast Quad View" state="" position="0" duration="0" muted="False" loop="False" audiobusses="">
+      <layer index="1" input="1" key="{podcast-host-camera}" title="Host Camera" zoom="0.5" panX="-0.5" panY="0.5"/>
+      <layer index="2" input="2" key="{podcast-guest-a}" title="Guest A Call" zoom="0.5" panX="0.5" panY="0.5"/>
+      <layer index="3" input="3" key="{podcast-guest-b}" title="Guest B Call" zoom="0.5" panX="-0.5" panY="-0.5"/>
+    </input>
+    <input key="{podcast-lower-third}" number="5" type="GT" title="Podcast Lower Third" state="" position="0" duration="0" muted="False" loop="False" audiobusses="">
+      <text name="Name.Text">Guest A</text>
+      <text name="Role.Text">Remote Guest</text>
+    </input>
+    <input key="{podcast-music}" number="6" type="Audio" title="Music Bed" state="Running" position="0" duration="0" muted="False" loop="True" audiobusses="M,C"></input>
+    <input key="{podcast-stinger}" number="7" type="Video" title="Segment Stinger" state="Paused" position="0" duration="5000" muted="True" loop="False" audiobusses=""></input>
+  </inputs>
+  <overlays>
+    <overlay number="1">5</overlay>
+    <overlay number="2"></overlay>
+    <overlay number="3"></overlay>
+    <overlay number="4"></overlay>
+  </overlays>
+  <preview>5</preview>
+  <active>4</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording>True</recording>
+  <streaming>True</streaming>
+  <external>True</external>
+  <audio>
+    <master volume="100" muted="False"/>
+    <busa volume="85" muted="False"/>
+    <busb volume="85" muted="False"/>
+    <busc volume="65" muted="False"/>
+  </audio>
+</vmix>

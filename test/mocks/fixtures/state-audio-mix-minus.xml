@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>29.0.0.0</version>
+  <edition>Pro</edition>
+  <inputs>
+    <input key="{audio-host-mic}" number="1" type="Audio" title="Host Mic" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M,A,B"></input>
+    <input key="{audio-guest-one}" number="2" type="vMixCall" title="Caller One" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M,A"></input>
+    <input key="{audio-guest-two}" number="3" type="vMixCall" title="Caller Two" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M,B"></input>
+    <input key="{audio-music}" number="4" type="Audio" title="Music Return" state="Running" position="0" duration="0" muted="True" loop="True" audiobusses="M"></input>
+    <input key="{audio-silent-clip}" number="5" type="Video" title="Silent Bumper" state="Paused" position="0" duration="8000" muted="False" loop="False" audiobusses=""></input>
+  </inputs>
+  <overlays>
+    <overlay number="1"></overlay>
+    <overlay number="2"></overlay>
+    <overlay number="3"></overlay>
+    <overlay number="4"></overlay>
+  </overlays>
+  <preview>5</preview>
+  <active>1</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording>True</recording>
+  <streaming>True</streaming>
+  <external>True</external>
+  <audio>
+    <master volume="90" muted="False"/>
+    <busa volume="75" muted="False"/>
+    <busb volume="75" muted="False"/>
+    <busc volume="0" muted="True"/>
+  </audio>
+</vmix>

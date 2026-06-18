@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>29.0.0.0</version>
+  <edition>4K Plus</edition>
+  <inputs>
+    <input key="abc12300-0001-0001-0001-000000000001" number="1" type="Capture" title="Camera 1" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+    </input>
+    <input key="abc12300-0002-0002-0002-000000000002" number="2" type="GT" title="Lower Third" state="" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+      <text name="Name.Text">John Smith</text>
+      <text name="Title.Text">CEO, Example Corp</text>
+      <image name="Logo.Source">C:\Graphics\logo.png</image>
+    </input>
+    <input key="abc12300-0003-0003-0003-000000000003" number="3" type="Title" title="Full Screen Title" state="" position="0" duration="0" muted="False" loop="False" audiobusses="M">
+      <text name="Headline">Breaking News</text>
+      <text name="Subheadline">Important announcement</text>
+    </input>
+  </inputs>
+  <overlays>
+    <overlay number="1">2</overlay>
+    <overlay number="2"/>
+    <overlay number="3"/>
+    <overlay number="4"/>
+  </overlays>
+  <preview>1</preview>
+  <active>1</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording>True</recording>
+  <streaming>True</streaming>
+  <external>False</external>
+  <audio>
+    <master volume="100" muted="False"/>
+    <busa volume="80" muted="False"/>
+    <busb volume="50" muted="True"/>
+  </audio>
+</vmix>

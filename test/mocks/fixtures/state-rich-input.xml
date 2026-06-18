@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vmix>
+  <version>29.0.0.0</version>
+  <edition>4K Plus</edition>
+  <inputs>
+    <input key="{playlist-key}" number="1" type="VideoList" title="Segment Playlist" state="Running" position="1000" duration="30000" muted="False" loop="True" audiobusses="M" selectedIndex="2" meterF1="0.12" meterF2="0.34">
+      <overlay index="1" input="2" key="{camera-key}" title="Camera 1" panX="0.1" panY="-0.2" zoom="1.25" width="0.5" height="0.6" cropX1="0.01" cropY1="0.02" cropX2="0.99" cropY2="0.98"></overlay>
+      <layer number="2" input="3" title="Lower Third" zoom="0.75"/>
+    </input>
+    <input key="{camera-key}" number="2" type="Capture" title="Camera 1" state="Running" position="0" duration="0" muted="False" loop="False" audiobusses="M,A"></input>
+    <input key="{lower-third-key}" number="3" type="GT" title="Lower Third" state="" position="0" duration="0" muted="False" loop="False" audiobusses="">
+      <text name="Name.Text">Jane Host</text>
+    </input>
+  </inputs>
+  <overlays>
+    <overlay number="1"></overlay>
+    <overlay number="2"></overlay>
+    <overlay number="3"></overlay>
+    <overlay number="4"></overlay>
+  </overlays>
+  <preview>2</preview>
+  <active>1</active>
+  <fadeToBlack>False</fadeToBlack>
+  <recording>False</recording>
+  <streaming>False</streaming>
+  <external>False</external>
+  <audio>
+    <master volume="100" muted="False"/>
+  </audio>
+</vmix>

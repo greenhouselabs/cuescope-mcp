@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security reports
+    url: https://github.com/greenhouselabs/cuescope-mcp/security/advisories/new
+    about: Report suspected vulnerabilities privately. Do not post secrets, vMix Call links, or exploit details in public issues.
+  - name: vMix product support
+    url: https://www.vmix.com/support/
+    about: Use official vMix support for vMix product bugs, licensing, or account issues.
+  - name: vMix community forums
+    url: https://forums.vmix.com/
+    about: Ask broader vMix workflow and production questions.
