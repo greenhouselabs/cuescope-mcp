@@ -37,6 +37,10 @@ export function buildServerInstructions(config: Config): string {
     'Control tools are gated: they are absent in lower modes by design, not broken. Do not work around missing tools with raw vMix HTTP URLs, shell commands, or shortcut-function strings.',
     'Read vmix://server/status for the full safety boundary and the opt-in env vars (VMIX_CONTROL_MODE=true, plus VMIX_HIGH_IMPACT=true) that require a server restart to change mode.',
     'Start with vmix://state/summary for current state and vmix_connection_test to diagnose connectivity.',
+    'For current input questions, use live-state tools first. Saved .vmix tools require an explicit server-host path, with raw XML content as a fallback, and are for saved scripts, triggers, data sources, and saved-vs-live drift.',
+    'For saved .vmix evidence, prefer an absolute path on the machine running CueScope. Chat-uploaded attachments may not be readable by the MCP server; raw XML content is only a fallback, especially for smaller presets.',
+    'For one-input saved-preset questions, use compact/targeted summaries first: vmix_read_preset_file summary for title metadata and data-source bindings, vmix_audit_preset_file with targetInput for trigger/script references. Use full script reviews only when raw script logic, validation, or rewrite guidance is requested.',
+    'If live state is unavailable for a current input question, run vmix_connection_test before asking for a saved .vmix file unless the user explicitly wants last-saved preset evidence.',
   ].join('\n');
 }
 

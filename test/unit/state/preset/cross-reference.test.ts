@@ -5,7 +5,7 @@ import { PRESET_FRESHNESS_NOTE } from '../../../../src/state/preset/preset-types
 import type { VmixState } from '../../../../src/state/types.js';
 
 function input(over: Partial<PresetInput>): PresetInput {
-  return { key: null, title: '', type: null, audio: null, videoCall: null, triggers: [], ...over };
+  return { key: null, title: '', type: null, audio: null, videoCall: null, triggers: [], titleMetadata: null, ...over };
 }
 function preset(over: Partial<PresetFile>): PresetFile {
   return {

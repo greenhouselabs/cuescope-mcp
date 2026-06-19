@@ -12,6 +12,7 @@ Use these before any operator workflow:
 | `vmix_analyze_preset` | Understand the current preset, production roles, output readiness, preflight status, and likely risks |
 | `vmix_generate_show_checklist` | Create a reviewable rehearsal, go-live, recovery, or end-show operator handoff |
 | `vmix_find_input` | Locate inputs by number, name, key, type, or fuzzy match |
+| `vmix_inspect_input` | Live-first input inspection for questions like "what is Input 8"; asks first for a server-host `.vmix` path only for saved-only evidence, with raw XML as a fallback |
 | `vmix_explain_input` | Explain one input in context |
 | `vmix_diagnose_audio` | Review audio routing, mute/solo state, buses, and mix-minus risk |
 | `vmix_diagnose_outputs` | Review recording, streaming, external output, video/audio path, and destination blind spots |
@@ -21,7 +22,7 @@ Use these before any operator workflow:
 | `vmix_compare_xml_snapshots` | Explain meaningful differences between vMix XML snapshots |
 | `vmix_read_preset_file` | Read-only, redacted inventory of a saved `.vmix` preset file: compact summary by default, full scripts/triggers with `detailMode="full"` (as last saved) |
 | `vmix_explain_preset_scripts` | Read-only review and risk flags for VB.NET scripts stored in a saved `.vmix` preset, validated against live state; never executes scripts |
-| `vmix_audit_preset_file` | Read-only cross-reference of a saved `.vmix` preset against live vMix state: missing scripts, absent trigger targets, and saved-vs-live drift |
+| `vmix_audit_preset_file` | Read-only cross-reference of a saved `.vmix` preset against live vMix state: missing scripts, absent trigger targets, saved-vs-live drift, and target-input trigger/script references |
 | `vmix_preflight` | Go-live readiness report with a prioritized `ready`/`caution`/`not-ready` verdict; optionally cross-references a saved `.vmix` preset (read-only) |
 | `vmix_connection_test` | Test connectivity to vMix and diagnose connection problems |
 
@@ -45,8 +46,11 @@ Review Mode is the default and should be assumed unless the active server status
 
 1. Read `vmix://server/status`.
 2. Read current state resources such as `vmix://state/summary`, `vmix://state/relationships`, `vmix://inputs`, and `vmix://audio`.
-3. Use Review tools for analysis, diagnosis, validation, scripts, and API plans.
-4. Return reviewable artifacts, assumptions, risk notes, and test steps.
+3. Use live-state Review tools first for current show/input questions.
+4. Ask for an explicit saved `.vmix` path on the CueScope server host only when the user needs saved scripts, triggers, title countdown/data-source setup, or saved-vs-live drift. Raw XML content is a fallback when the path is unavailable; chat-uploaded attachments may not be readable by the MCP server.
+5. For one-input saved-preset questions, use compact/targeted summaries before broad script reviews: `vmix_read_preset_file` summary for title metadata/data-source bindings, and `vmix_audit_preset_file` with `targetInput` for trigger/script references.
+6. Use `detailMode="full"` or `vmix_explain_preset_scripts` when the user asks for exact script bodies, validation, or rewrite guidance.
+7. Return reviewable artifacts, assumptions, risk notes, and test steps.
 
 Control tools should be referenced only when `VMIX_CONTROL_MODE=true` is active or when explaining what an operator could do manually after review. High-impact control tools for scripts, batch commands, recording, streaming, snapshots, presets, destructive input management, output routing, show-building, and replay recording also require `VMIX_HIGH_IMPACT=true`.
 
@@ -56,6 +60,7 @@ Do not offer or echo raw vMix HTTP URLs, curl/Invoke-WebRequest commands, shell-
 
 | User Request | Skills Needed |
 |--------------|---------------|
+| "What is Input 8?" | Use `vmix_inspect_input` first |
 | "Explain my preset before the show" | `vmix-basics` + `vmix-graphics` + `vmix-audio` |
 | "Check my show before we go live" | Use `vmix_show_review`, then load focused skills only for deeper follow-up |
 | "Are my stream/recording outputs ready?" | Use `vmix_diagnose_outputs`, then `vmix_diagnose_audio` if the destination audio path needs deeper review |
@@ -71,8 +76,9 @@ Do not offer or echo raw vMix HTTP URLs, curl/Invoke-WebRequest commands, shell-
 1. State inspection comes before action planning.
 2. Generated scripts and API sequences are reviewable artifacts, not execution requests.
 3. Input names are case-sensitive; prefer stable keys or validated exact names.
-4. VB.NET loops must include `Sleep()`.
-5. Streaming, recording, batch commands, preset changes, output routing, show-building, and script execution are high-impact control workflows.
+4. Current input questions use live state first; saved `.vmix` files are explicit user-provided evidence for saved-only details, including GT/title countdown and data-source metadata.
+5. VB.NET loops must include `Sleep()`.
+6. Streaming, recording, batch commands, preset changes, output routing, show-building, and script execution are high-impact control workflows.
 
 ## Bring Your Own Skills
 

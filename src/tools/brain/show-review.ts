@@ -370,7 +370,7 @@ function summarizePresetAudit(call: ToolCall<PresetAuditData> | null, requested:
       findingSummary: null,
       reviewFindings: [],
       informationalFindingCount: 0,
-      note: 'No saved preset path/content was supplied, so saved-preset audit findings were not included.',
+      note: 'No saved preset path was supplied, so saved-preset audit findings were not included. Raw XML content is available as a fallback when a server-host path is unavailable.',
     };
   }
 
@@ -588,7 +588,7 @@ export const showReviewTool = createTool({
   description:
     'Natural-language read-only show review for requests like "check my show", "am I ready to go live", ' +
     '"preflight this setup", or "check audio before the show". Orchestrates live-state review, audio diagnosis, ' +
-    'output readiness, go-live preflight, checklist guidance, and compact saved-preset audit evidence when an explicit .vmix path/content is supplied.',
+    'output readiness, go-live preflight, checklist guidance, and compact saved-preset audit evidence when an explicit server-host .vmix path or raw XML fallback is supplied.',
   schema: z.object({
     intent: ReviewIntentSchema.optional().describe(
       'Review intent: showReview, goLive, rehearsal, recovery, endShow, or audio. Default: showReview.'
@@ -596,11 +596,11 @@ export const showReviewTool = createTool({
     presetPath: z
       .string()
       .optional()
-      .describe('Optional explicit path to a saved .vmix preset for cross-reference. Never scanned automatically.'),
+      .describe('Optional explicit path to a saved .vmix preset on the CueScope server host for cross-reference. Never scanned automatically.'),
     presetContent: z
       .string()
       .optional()
-      .describe('Optional raw .vmix XML content, alternative to presetPath. Secrets are redacted by downstream preset tools.'),
+      .describe('Optional raw .vmix XML content fallback when presetPath is unavailable. Secrets are redacted by downstream preset tools.'),
     includePassedChecks: z
       .boolean()
       .optional()
@@ -677,7 +677,7 @@ export const showReviewTool = createTool({
       savedPresetAuditIncluded: presetAudit.status === 'available',
       note: presetContextRequested
         ? 'Saved preset context was passed to tools that support it. Treat it as last-saved evidence, not proof of unsaved live changes.'
-        : 'No saved preset path/content was supplied. Review is live-state only; ask for an explicit .vmix path if saved-preset context would improve confidence.',
+        : 'No saved preset path was supplied. Review is live-state only; ask for an explicit .vmix path on the CueScope server host if saved-preset context would improve confidence. Raw XML content is a fallback.',
       error:
         !audioCallWithPreset.ok && presetContextRequested
           ? audioCallWithPreset.error

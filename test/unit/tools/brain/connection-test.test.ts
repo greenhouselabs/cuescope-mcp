@@ -49,6 +49,7 @@ describe('vmix_connection_test', () => {
     });
     expect(data.mode).toBe('review');
     expect(data.modeLabel).toBe('Review Mode');
+    expect(data.currentInputQuestionGuidance).toContain('vmix_inspect_input');
     // Only connection coordinates are reported - never credentials
     expect(Object.keys(data.configured)).toEqual(['host', 'httpPort', 'tcpPort', 'tcpEnabled']);
     expect(JSON.stringify(data)).not.toMatch(/password|apiKey|token/i);
@@ -87,6 +88,7 @@ describe('vmix_connection_test', () => {
     expect(data.http.errorType).toBe('connection_refused');
     expect(data.http.hints.join('\n')).toMatch(/is vMix running/i);
     expect(data.http.hints.join('\n')).toMatch(/Settings > Web Controller/i);
+    expect(data.currentInputQuestionGuidance).toContain('Fix or confirm connectivity');
   });
 
   it('classifies DNS failures with host hints', async () => {

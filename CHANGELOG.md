@@ -6,6 +6,19 @@ This project follows the spirit of [Keep a Changelog](https://keepachangelog.com
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-06-19
+
+### Added
+
+- Add `vmix_inspect_input`, a live-first Review Mode tool for current input questions such as "what is Input 8", with explicit saved `.vmix` guidance only when scripts, triggers, data-source bindings, or saved-vs-live drift are needed.
+- Parse saved GT/title `CountdownXML` and per-title `DataSourcesXML` metadata from `.vmix` input definitions so saved-preset reviews can expose countdown settings and title field data-source bindings, including nested `dataSource` + `mapper` records.
+- Add target-input reference summaries to `vmix_audit_preset_file` for saved-preset questions about one input's own triggers, inbound trigger references, and scripts that reference the input.
+
+### Changed
+
+- Clarify tool descriptions and skill guidance so current show/input questions use live state first, while saved-preset tools prefer an explicit server-host `.vmix` path and treat raw XML content as a fallback.
+- Clarify saved-preset routing so clients prefer compact one-input summaries before full script dumps, reserving full script review for exact script logic, validation, or rewrite requests.
+
 ## [1.0.1] - 2026-06-18
 
 ### Changed

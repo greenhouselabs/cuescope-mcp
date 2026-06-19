@@ -96,6 +96,7 @@ describe('redactPresetFile', () => {
             guestBandwidth: '1200',
           },
           triggers: [],
+          titleMetadata: null,
         },
       ],
       dataSources: [],
@@ -110,5 +111,58 @@ describe('redactPresetFile', () => {
 
     out.inputs[0]!.audio!.buses.push('C');
     expect(preset.inputs[0]!.audio!.buses).toEqual(['A']);
+  });
+
+  it('redacts title metadata values while preserving structure', () => {
+    const preset: PresetFile = {
+      meta: { path: null, modifiedAt: null, presetVersion: '9', source: 'saved preset file', freshnessNote: PRESET_FRESHNESS_NOTE },
+      scripts: [],
+      inputs: [
+        {
+          key: '{title-key}',
+          title: 'Preshow',
+          type: '22',
+          audio: null,
+          videoCall: null,
+          triggers: [],
+          titleMetadata: {
+            hasCountdownXml: true,
+            hasDataSourcesXml: true,
+            countdownSettings: [
+              {
+                fieldName: 'Countdown.Text',
+                startTime: '00:00:00',
+                duration: null,
+                format: null,
+                reverse: null,
+                reverseDisplay: null,
+                autoStart: false,
+                loop: false,
+                actionAtEnd: 'token=SECRET_TOKEN',
+                rawValues: { ActionAtEnd: 'token=SECRET_TOKEN' },
+              },
+            ],
+            dataSourceBindings: [
+              {
+                fieldName: 'Countdown.Text',
+                instanceId: null,
+                dataSource: 'Default',
+                table: 'Default',
+                column: 'Auto',
+                row: -1,
+                rawValues: { Value: 'apikey=SECRET_KEY' },
+              },
+            ],
+          },
+        },
+      ],
+      dataSources: [],
+    };
+
+    const out = redactPresetFile(preset);
+
+    expect(out.inputs[0]!.titleMetadata?.countdownSettings[0]!.actionAtEnd).toBe('token=[redacted]');
+    expect(out.inputs[0]!.titleMetadata?.countdownSettings[0]!.rawValues.ActionAtEnd).toBe('token=[redacted]');
+    expect(out.inputs[0]!.titleMetadata?.dataSourceBindings[0]!.rawValues.Value).toBe('apikey=[redacted]');
   });
 });

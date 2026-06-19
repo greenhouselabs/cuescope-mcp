@@ -36,7 +36,7 @@ For a first hands-on walkthrough, use [DEMO.md](DEMO.md). If you used the old co
 |------------|------------------|
 | Preset analysis | Explains current inputs, roles, active/preview state, overlays, and likely risks |
 | Input lookup | Finds inputs by number, key, name, type, or fuzzy title matching |
-| Input explanation | Explains one input in context, including fields and production role hints |
+| Input inspection | Answers current input questions from live state first, including visible fields and production role hints |
 | Audio diagnosis | Reviews buses, mute state, solo state, vMix Call patterns, and mix-minus risks |
 | Troubleshooting guidance | Translates pasted errors and explicit log files/excerpts into likely causes, confidence, and safe next checks |
 | Script generation | Produces reviewable VB.NET artifacts using actual input references and title fields |
@@ -45,6 +45,8 @@ For a first hands-on walkthrough, use [DEMO.md](DEMO.md). If you used the old co
 | XML comparison | Compares before/after vMix XML snapshots and explains changed production state |
 | Knowledge resources | Exposes curated vMix API, scripting, audio, production, troubleshooting, forum-pattern, and example notes |
 | Control Mode | Opt-in access to preserved live-control tools, with highest-impact tools behind a second flag |
+
+Saved `.vmix` files are explicit evidence. CueScope uses live vMix state first for current show questions, and asks for a `.vmix` path on the machine running CueScope only when saved-only details are needed, such as stored scripts, input triggers, title countdown/data-source setup, or saved-vs-live drift. Raw XML content is a fallback when a server-visible path is unavailable; chat-uploaded attachments may not be readable by the MCP server.
 
 ## Quick Start
 
@@ -289,11 +291,13 @@ These tools are visible by default.
 | `vmix_compare_xml_snapshots` | Compare two vMix XML snapshots and explain meaningful changes |
 | `vmix_read_preset_file` | Read-only inventory of a saved `.vmix` preset file: compact summary by default; `detailMode="full"` includes full scripts/triggers (read-only; as last saved) |
 | `vmix_explain_preset_scripts` | Plain-language review and risk flags for VB.NET scripts stored in a saved `.vmix` preset, validated against live state (read-only; as last saved) |
-| `vmix_audit_preset_file` | Cross-reference a saved `.vmix` preset against live vMix state: flags triggers calling missing scripts, triggers targeting absent inputs, and saved-vs-live drift (read-only; as last saved) |
+| `vmix_audit_preset_file` | Cross-reference a saved `.vmix` preset against live vMix state: flags triggers calling missing scripts, triggers targeting absent inputs, saved-vs-live drift, and with `targetInput` summarizes one input's own triggers plus inbound trigger/script references (read-only; as last saved) |
 | `vmix_preflight` | Go-live readiness report: checks program, preview, audio, fade-to-black, overlays, and input roles against heuristic rules and returns a prioritized verdict (`ready`/`caution`/`not-ready`); optionally cross-references a saved `.vmix` preset (read-only) |
 | `vmix_connection_test` | Test connectivity to vMix and diagnose connection problems |
 
 Note: `vmix_analyze_preset` analyzes **live** vMix state from the running `/api/` endpoint. The `vmix_read_preset_file`, `vmix_explain_preset_scripts`, and `vmix_audit_preset_file` tools read a **saved file** on disk and reflect the preset as last saved, which may differ from what vMix is currently running.
+
+For single-input saved-preset questions, use targeted summaries before full script dumps: `vmix_read_preset_file` summary mode for title countdown/data-source bindings, and `vmix_audit_preset_file` with `targetInput` for attached triggers, inbound trigger references, and scripts that reference the input. Use `detailMode="full"` or `vmix_explain_preset_scripts` when the user asks for exact script bodies, validation, or rewrite guidance.
 
 ## Control Mode Tools
 

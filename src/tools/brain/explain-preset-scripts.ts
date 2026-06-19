@@ -14,7 +14,7 @@ import { formatErrorMessage } from '../../errors/index.js';
 
 const schema = z.object({
   path: z.string().optional().describe('Absolute path to a .vmix file on the server host.'),
-  content: z.string().optional().describe('Raw .vmix XML, as an alternative to a path.'),
+  content: z.string().optional().describe('Raw .vmix XML fallback when a server-host file path is unavailable.'),
   scriptName: z.string().optional().describe('Optional: review only the script with this exact name.'),
 });
 
@@ -261,11 +261,11 @@ export const explainPresetScriptsTool = createTool({
   name: 'vmix_explain_preset_scripts',
   description:
     'Read-only review of VB.NET scripts stored in a saved .vmix preset. Explains each script and flags risks ' +
-    '(unsafe loops, unknown functions, fragile input/field references) against current live state. Never executes scripts.',
+    '(unsafe loops, unknown functions, fragile input/field references) against current live state. Never executes scripts. Use after targeted saved-preset summaries when the user asks for exact script logic, script validation, or rewrite guidance; do not use as the first step for routine one-input title binding or trigger-reference questions.',
   schema,
   handler: async (params: { path?: string; content?: string; scriptName?: string }, ctx: ToolContext) => {
     if (!params.path?.trim() && !params.content) {
-      return errorResult('Provide either a .vmix file path or its content.');
+      return errorResult('Provide either a .vmix file path on the CueScope server host or raw XML content as a fallback.');
     }
     try {
       const preset = redactPresetFile(parsePresetFile(loadPresetFile(params)));

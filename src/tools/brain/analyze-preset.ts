@@ -335,7 +335,8 @@ export const analyzePresetTool = createTool({
   name: 'vmix_analyze_preset',
   description:
     'Read-only analysis of the current live vMix state. Produces a production map from the live XML ' +
-    'without executing any vMix functions. Analyzes what vMix is running now, not a saved file.',
+    'without executing any vMix functions. Analyzes what vMix is running now, not a saved file. ' +
+    'For saved scripts, triggers, or data-source setup, use saved-preset tools only when a server-host .vmix path is supplied; raw XML content is a fallback.',
   schema: z.object({
     detail: z
       .enum(['summary', 'full'])

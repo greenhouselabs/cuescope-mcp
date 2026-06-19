@@ -20,6 +20,7 @@ const REVIEW_TOOL_NAMES = [
   'vmix_analyze_preset',
   'vmix_generate_show_checklist',
   'vmix_find_input',
+  'vmix_inspect_input',
   'vmix_explain_input',
   'vmix_diagnose_audio',
   'vmix_diagnose_outputs',
@@ -57,6 +58,10 @@ describe('vmix_server_version', () => {
       highImpactMode: false,
       features: SERVER_FEATURES,
     });
+    expect(data.server.features.liveFirstInputInspectionTool).toBe(true);
+    expect(data.server.features.savedPresetTitleMetadata).toBe(true);
+    expect(data.server.features.savedPresetNestedTitleDataSources).toBe(true);
+    expect(data.server.features.savedPresetTargetInputReferences).toBe(true);
     expect(data.server.features.serverVersionTool).toBe(true);
     expect(data.server.features.stateAwareTroubleshootingHandoff).toBe(true);
     expect(data.server.features.desktopInstallSmokeDocs).toBe(true);
@@ -79,13 +84,14 @@ describe('vmix_server_version', () => {
       version: '29.0.0.0',
       edition: '4K Plus',
     });
+    expect(data.vmix.currentInputQuestionGuidance).toContain('vmix_inspect_input');
     expect(data.capabilities).toMatchObject({
-      tools: 18,
-      reviewTools: 18,
+      tools: 19,
+      reviewTools: 19,
       controlToolsAvailable: 117,
       controlSafeToolsAvailable: 91,
       highImpactToolsAvailable: 26,
-      totalKnownTools: 135,
+      totalKnownTools: 136,
     });
     expect(data.capabilities.activeToolNames).toEqual(REVIEW_TOOL_NAMES);
     expect(data.capabilities.reviewToolNames).toEqual(REVIEW_TOOL_NAMES);

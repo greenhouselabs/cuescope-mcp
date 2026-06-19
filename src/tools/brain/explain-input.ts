@@ -405,7 +405,8 @@ export const explainInputTool = createTool({
   name: 'vmix_explain_input',
   description:
     'Read-only explanation of a single vMix input, including role, references, program/preview/overlay usage, ' +
-    'audio routing, title fields, playback state, warnings, and script-reference guidance.',
+    'audio routing, title fields, playback state, warnings, and script-reference guidance. Use for current/running ' +
+    'vMix input questions; no saved .vmix file is required for visible live-state details.',
   schema: z.object({
     input: z
       .union([z.string().min(1), z.number().int().positive()])

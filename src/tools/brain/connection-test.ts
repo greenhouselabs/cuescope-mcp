@@ -167,6 +167,9 @@ export const connectionTestTool = createTool({
         tcpTally: tcpCheck,
         mode: modeInfo.mode,
         modeLabel: modeInfo.label,
+        currentInputQuestionGuidance: httpCheck.ok
+          ? 'vMix live state is available. Use vmix_inspect_input first for current input questions. For saved-only preset evidence, prefer an absolute .vmix path on the CueScope server host; chat attachments may not be server-readable.'
+          : 'vMix live state is unavailable. Fix or confirm connectivity before asking for a saved .vmix file, unless the user specifically wants last-saved preset evidence or saved-only scripts, triggers, data sources, or drift checks. For those saved-only checks, prefer an absolute .vmix path on the CueScope server host; raw XML content is a fallback.',
         note: 'Read-only connectivity diagnostic. No vMix state was mutated and no secrets are reported.',
       });
     } catch (error) {
