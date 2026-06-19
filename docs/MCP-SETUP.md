@@ -150,6 +150,8 @@ Generate a go-live checklist for the current preset. Do not control vMix.
 
 Expected result: the server reports Review Mode, shows only review tools as active, reads the current vMix state, and does not call any vMix function.
 
+For current input questions, CueScope should answer from live vMix state first. Saved `.vmix` files are requested explicitly only for saved-only details such as stored scripts, triggers, title countdown/data-source setup, or saved-vs-live drift. Prefer an absolute path on the machine running CueScope; raw XML content is a fallback when that path is unavailable, and chat-uploaded attachments may not be readable by the MCP server.
+
 ## Troubleshooting
 
 - If the MCP client cannot start the server, confirm Node.js 20+ is on the same PATH the client uses (`node --version`; `where node` on Windows shows the absolute path).

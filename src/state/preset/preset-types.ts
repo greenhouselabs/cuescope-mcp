@@ -50,6 +50,44 @@ export interface PresetInput {
   /** vMix Call-specific saved settings, when this input carries them. */
   videoCall: PresetInputVideoCall | null;
   triggers: PresetInputTrigger[];
+  /** Saved title/GT metadata embedded in input attributes, when present. */
+  titleMetadata: PresetInputTitleMetadata | null;
+}
+
+export interface PresetInputCountdownSetting {
+  /** Best-effort field/slot name when exposed, e.g. Countdown.Text. */
+  fieldName: string | null;
+  /** Countdown start/default value when exposed by vMix. */
+  startTime: string | null;
+  /** Countdown duration/default countdown value when exposed by vMix. */
+  duration: string | null;
+  format: string | null;
+  reverse: boolean | null;
+  reverseDisplay: boolean | null;
+  autoStart: boolean | null;
+  loop: boolean | null;
+  actionAtEnd: string | null;
+  /** Compact known child values preserved for review/debugging. */
+  rawValues: Record<string, string>;
+}
+
+export interface PresetInputDataSourceBinding {
+  /** Title field name, e.g. Countdown.Text, when exposed. */
+  fieldName: string | null;
+  /** Data-source instance id when vMix stores the binding by GUID/id. */
+  instanceId: string | null;
+  dataSource: string | null;
+  table: string | null;
+  column: string | null;
+  row: number | null;
+  rawValues: Record<string, string>;
+}
+
+export interface PresetInputTitleMetadata {
+  hasCountdownXml: boolean;
+  hasDataSourcesXml: boolean;
+  countdownSettings: PresetInputCountdownSetting[];
+  dataSourceBindings: PresetInputDataSourceBinding[];
 }
 
 export interface PresetInputAudio {
@@ -76,6 +114,8 @@ export interface PresetDataSourceTable {
 }
 
 export interface PresetDataSource {
+  /** Instance id from the saved preset, when present. */
+  id: string | null;
   /** Provider, from datasource friendlyName, e.g. "Google Sheets". */
   provider: string;
   /** Instance title; may be empty/null. */

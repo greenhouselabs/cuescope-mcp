@@ -5,7 +5,7 @@
  */
 import { BUILD_SHA } from './generated/build-info.js';
 
-export const SERVER_VERSION = '1.0.1';
+export const SERVER_VERSION = '1.0.2';
 
 export const SERVER_PACKAGE_NAME = '@greenhouselabs/cuescope-mcp';
 
@@ -63,6 +63,10 @@ export function getServerModeInfo(
 }
 
 export const SERVER_FEATURES = {
+  liveFirstInputInspectionTool: true,
+  savedPresetTitleMetadata: true,
+  savedPresetNestedTitleDataSources: true,
+  savedPresetTargetInputReferences: true,
   findInputTruncationMetadata: true,
   analyzePresetDetailModes: ['summary', 'full'],
   analyzePresetSummaryInputIndexLimit: 20,

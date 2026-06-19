@@ -42,6 +42,12 @@ function redactScript(s: PresetScript): PresetScript {
   return { name: s.name, source: redactSecrets(s.source) };
 }
 
+function redactValueMap(values: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(values).map(([key, value]) => [key, redactSecrets(value)])
+  );
+}
+
 /** Returns a copy with secrets masked; never mutates the input. */
 export function redactPresetFile(preset: PresetFile): PresetFile {
   return {
@@ -58,6 +64,26 @@ export function redactPresetFile(preset: PresetFile): PresetFile {
           }
         : null,
       triggers: i.triggers.map((t) => ({ ...t, value: t.value === null ? null : redactSecrets(t.value) })),
+      titleMetadata: i.titleMetadata
+        ? {
+            ...i.titleMetadata,
+            countdownSettings: i.titleMetadata.countdownSettings.map((setting) => ({
+              ...setting,
+              fieldName: setting.fieldName === null ? null : redactSecrets(setting.fieldName),
+              actionAtEnd: setting.actionAtEnd === null ? null : redactSecrets(setting.actionAtEnd),
+              rawValues: redactValueMap(setting.rawValues),
+            })),
+            dataSourceBindings: i.titleMetadata.dataSourceBindings.map((binding) => ({
+              ...binding,
+              fieldName: binding.fieldName === null ? null : redactSecrets(binding.fieldName),
+              instanceId: binding.instanceId,
+              dataSource: binding.dataSource === null ? null : redactSecrets(binding.dataSource),
+              table: binding.table === null ? null : redactSecrets(binding.table),
+              column: binding.column === null ? null : redactSecrets(binding.column),
+              rawValues: redactValueMap(binding.rawValues),
+            })),
+          }
+        : null,
     })),
     dataSources: preset.dataSources.map((d) => ({ ...d, tables: d.tables.map((t) => ({ ...t })) })),
   };

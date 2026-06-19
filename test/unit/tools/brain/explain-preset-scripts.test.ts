@@ -12,6 +12,11 @@ function ctxWithInputs(): ToolContext {
 }
 
 describe('vmix_explain_preset_scripts', () => {
+  it('describes script review as a deeper follow-up, not the first one-input lookup step', () => {
+    expect(explainPresetScriptsTool.description).toContain('Use after targeted saved-preset summaries');
+    expect(explainPresetScriptsTool.description).toContain('do not use as the first step');
+  });
+
   it('returns one validated review entry per script, labeled as saved', async () => {
     const res = await explainPresetScriptsTool.handler({ path: FIXTURE }, ctxWithInputs());
     const payload = JSON.parse(res.content[0]!.text);

@@ -14,7 +14,10 @@ type DetailMode = 'summary' | 'full';
 
 const schema = z.object({
   path: z.string().optional().describe('Absolute path to a .vmix file on the server host.'),
-  content: z.string().optional().describe('Raw .vmix XML, as an alternative to a path (e.g. remote host).'),
+  content: z
+    .string()
+    .optional()
+    .describe('Raw .vmix XML fallback when a server-host file path is unavailable; prefer path for real/large presets.'),
   detailMode: z
     .enum(['summary', 'full'])
     .optional()
@@ -51,11 +54,40 @@ function scriptSummary(script: PresetScript) {
 }
 
 function inputSummary(input: PresetInput) {
+  const titleMetadata = input.titleMetadata
+    ? {
+        hasCountdownXml: input.titleMetadata.hasCountdownXml,
+        hasDataSourcesXml: input.titleMetadata.hasDataSourcesXml,
+        countdownSettingCount: input.titleMetadata.countdownSettings.length,
+        dataSourceBindingCount: input.titleMetadata.dataSourceBindings.length,
+        countdownSettings: input.titleMetadata.countdownSettings.map((setting) => ({
+          fieldName: setting.fieldName,
+          startTime: setting.startTime,
+          duration: setting.duration,
+          format: setting.format,
+          reverse: setting.reverse,
+          reverseDisplay: setting.reverseDisplay,
+          autoStart: setting.autoStart,
+          loop: setting.loop,
+          actionAtEnd: setting.actionAtEnd,
+        })),
+        dataSourceBindings: input.titleMetadata.dataSourceBindings.map((binding) => ({
+          fieldName: binding.fieldName,
+          instanceId: binding.instanceId,
+          dataSource: binding.dataSource,
+          table: binding.table,
+          column: binding.column,
+          row: binding.row,
+        })),
+      }
+    : null;
+
   return {
     key: input.key,
     title: input.title,
     type: input.type,
     triggerCount: input.triggers.length,
+    titleMetadata,
     audio: input.audio
       ? {
           muted: input.audio.muted,
@@ -80,6 +112,7 @@ function baseInventory(preset: PresetFile, detailMode: DetailMode) {
   const triggerCount = preset.inputs.reduce((n, i) => n + i.triggers.length, 0);
   const videoCallInputs = preset.inputs.filter((input) => input.videoCall !== null);
   const inputsWithSavedAudio = preset.inputs.filter((input) => input.audio !== null);
+  const inputsWithTitleMetadata = preset.inputs.filter((input) => input.titleMetadata !== null);
 
   return {
     detailMode,
@@ -92,6 +125,15 @@ function baseInventory(preset: PresetFile, detailMode: DetailMode) {
       inputs: preset.inputs.length,
       triggers: triggerCount,
       dataSources: preset.dataSources.length,
+      titleMetadataInputs: inputsWithTitleMetadata.length,
+      titleCountdownSettings: preset.inputs.reduce(
+        (n, input) => n + (input.titleMetadata?.countdownSettings.length ?? 0),
+        0
+      ),
+      titleDataSourceBindings: preset.inputs.reduce(
+        (n, input) => n + (input.titleMetadata?.dataSourceBindings.length ?? 0),
+        0
+      ),
       inputsWithSavedAudio: inputsWithSavedAudio.length,
       videoCallInputs: videoCallInputs.length,
     },
@@ -119,7 +161,8 @@ function buildInventory(preset: PresetFile, detailMode: DetailMode) {
     omitted: {
       scriptSources: preset.scripts.length,
       inputTriggers: base.counts.triggers,
-      reason: 'summary mode omits script source and full trigger bodies. Re-run with detailMode="full" for complete preset data.',
+      reason:
+        'summary mode omits script source and full trigger bodies. Use this compact summary first for title countdown/data-source metadata and input-level counts. Re-run with detailMode="full" only when raw scripts or full trigger bodies are needed.',
     },
   };
 }
@@ -127,13 +170,16 @@ function buildInventory(preset: PresetFile, detailMode: DetailMode) {
 export const readPresetFileTool = createTool({
   name: 'vmix_read_preset_file',
   description:
-    'Read-only inventory of a saved vMix .vmix preset file: scripts, input triggers, data sources, inputs, saved audio flags, and vMix Call metadata. ' +
-    'Defaults to a compact summary; use detailMode="full" for script source and full trigger bodies. ' +
-    'Secrets are redacted. Reflects the preset as last saved, which may differ from live vMix state.',
+    'Read-only inventory of a saved vMix .vmix preset file: scripts, input triggers, global data sources, title countdown/data-source metadata, inputs, saved audio flags, and vMix Call metadata. ' +
+    'Defaults to a compact summary; use summary first for one-input saved-preset questions about title metadata or data-source bindings. Use detailMode="full" only when raw script source or full trigger bodies are specifically needed. ' +
+    'Secrets are redacted. Reflects the preset as last saved, which may differ from live vMix state. ' +
+    'Use only when the user supplies an explicit .vmix path on the machine running CueScope or asks for saved-only facts. Chat-uploaded attachments may not be readable by the MCP server, and raw XML is a fallback. For current input questions, use live-state tools first; if vMix is disconnected, run vmix_connection_test before asking for a saved file.',
   schema,
   handler: (params: ReadPresetFileParams, _ctx: ToolContext) => {
     if (!params.path?.trim() && !params.content) {
-      return Promise.resolve(errorResult('Provide either a .vmix file path or its content.'));
+      return Promise.resolve(
+        errorResult('Provide either a .vmix file path on the CueScope server host or raw XML content as a fallback.')
+      );
     }
     try {
       const preset = redactPresetFile(parsePresetFile(loadPresetFile(params)));

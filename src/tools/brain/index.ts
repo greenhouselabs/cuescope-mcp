@@ -11,6 +11,7 @@ import { diagnoseLogsTool } from './diagnose-logs.js';
 import { diagnoseOutputsTool } from './diagnose-outputs.js';
 import { explainInputTool } from './explain-input.js';
 import { findInputTool } from './find-input.js';
+import { inspectInputTool } from './inspect-input.js';
 import { generateApiSequenceTool } from './generate-api-sequence.js';
 import { generateScriptTool } from './generate-script.js';
 import { generateShowChecklistTool } from './generate-show-checklist.js';
@@ -29,6 +30,7 @@ export const brainToolDefinitions: AnyToolDefinition[] = [
   analyzePresetTool,
   generateShowChecklistTool,
   findInputTool,
+  inspectInputTool,
   explainInputTool,
   diagnoseAudioTool,
   diagnoseOutputsTool,
@@ -51,6 +53,7 @@ export { diagnoseLogsTool } from './diagnose-logs.js';
 export { diagnoseOutputsTool } from './diagnose-outputs.js';
 export { explainInputTool } from './explain-input.js';
 export { findInputTool } from './find-input.js';
+export { inspectInputTool } from './inspect-input.js';
 export { generateApiSequenceTool } from './generate-api-sequence.js';
 export { generateScriptTool } from './generate-script.js';
 export { generateShowChecklistTool } from './generate-show-checklist.js';

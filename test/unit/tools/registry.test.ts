@@ -27,7 +27,7 @@ function createFakeServer(): McpServer & { tool: ReturnType<typeof vi.fn> } {
 describe('tool registry modes', () => {
   it('preserves the full operator tool inventory', () => {
     expect(operatorTools).toHaveLength(117);
-    expect(allTools).toHaveLength(135);
+    expect(allTools).toHaveLength(136);
     expect(getToolStats().operator).toBe(117);
     expect(safeOperatorTools).toHaveLength(91);
     expect(dangerousOperatorTools).toHaveLength(26);
@@ -41,33 +41,34 @@ describe('tool registry modes', () => {
   });
 
   it('exposes the Phase 3 review tools by default', () => {
-    expect(brainTools).toHaveLength(18);
-    expect(getToolsForMode(false)).toHaveLength(18);
-    expect(getToolStats().brain).toBe(18);
+    expect(brainTools).toHaveLength(19);
+    expect(getToolsForMode(false)).toHaveLength(19);
+    expect(getToolStats().brain).toBe(19);
     expect(brainTools[0]?.name).toBe('vmix_server_version');
     expect(brainTools[1]?.name).toBe('vmix_show_review');
     expect(brainTools[2]?.name).toBe('vmix_analyze_preset');
     expect(brainTools[3]?.name).toBe('vmix_generate_show_checklist');
     expect(brainTools[4]?.name).toBe('vmix_find_input');
-    expect(brainTools[5]?.name).toBe('vmix_explain_input');
-    expect(brainTools[6]?.name).toBe('vmix_diagnose_audio');
-    expect(brainTools[7]?.name).toBe('vmix_diagnose_outputs');
-    expect(brainTools[8]?.name).toBe('vmix_generate_script');
-    expect(brainTools[9]?.name).toBe('vmix_validate_script');
-    expect(brainTools[10]?.name).toBe('vmix_generate_api_sequence');
-    expect(brainTools[11]?.name).toBe('vmix_compare_xml_snapshots');
-    expect(brainTools[12]?.name).toBe('vmix_read_preset_file');
-    expect(brainTools[13]?.name).toBe('vmix_explain_preset_scripts');
-    expect(brainTools[14]?.name).toBe('vmix_audit_preset_file');
-    expect(brainTools[15]?.name).toBe('vmix_preflight');
-    expect(brainTools[16]?.name).toBe('vmix_diagnose_logs');
-    expect(brainTools[17]?.name).toBe('vmix_connection_test');
+    expect(brainTools[5]?.name).toBe('vmix_inspect_input');
+    expect(brainTools[6]?.name).toBe('vmix_explain_input');
+    expect(brainTools[7]?.name).toBe('vmix_diagnose_audio');
+    expect(brainTools[8]?.name).toBe('vmix_diagnose_outputs');
+    expect(brainTools[9]?.name).toBe('vmix_generate_script');
+    expect(brainTools[10]?.name).toBe('vmix_validate_script');
+    expect(brainTools[11]?.name).toBe('vmix_generate_api_sequence');
+    expect(brainTools[12]?.name).toBe('vmix_compare_xml_snapshots');
+    expect(brainTools[13]?.name).toBe('vmix_read_preset_file');
+    expect(brainTools[14]?.name).toBe('vmix_explain_preset_scripts');
+    expect(brainTools[15]?.name).toBe('vmix_audit_preset_file');
+    expect(brainTools[16]?.name).toBe('vmix_preflight');
+    expect(brainTools[17]?.name).toBe('vmix_diagnose_logs');
+    expect(brainTools[18]?.name).toBe('vmix_connection_test');
   });
 
   it('returns control tools without High-Impact Control opt-in', () => {
     const tools = getToolsForMode(true);
 
-    expect(tools).toHaveLength(109);
+    expect(tools).toHaveLength(110);
     expect(tools.map((tool) => tool.name)).toContain('vmix_switch_cut');
     expect(tools.map((tool) => tool.name)).not.toContain('vmix_batch');
     expect(tools.map((tool) => tool.name)).not.toContain('vmix_record');
@@ -76,7 +77,7 @@ describe('tool registry modes', () => {
   });
 
   it('returns all preserved tools when High-Impact Control is enabled', () => {
-    expect(getToolsForMode(true, true)).toHaveLength(135);
+    expect(getToolsForMode(true, true)).toHaveLength(136);
   });
 
   it('registers only review tools in default review mode', () => {
@@ -86,7 +87,7 @@ describe('tool registry modes', () => {
 
     registerAllTools(server, ctx);
 
-    expect(server.tool).toHaveBeenCalledTimes(18);
+    expect(server.tool).toHaveBeenCalledTimes(19);
     expect(server.tool).toHaveBeenCalledWith(
       'vmix_server_version',
       expect.any(String),
@@ -113,6 +114,12 @@ describe('tool registry modes', () => {
     );
     expect(server.tool).toHaveBeenCalledWith(
       'vmix_find_input',
+      expect.any(String),
+      expect.any(Object),
+      expect.any(Function)
+    );
+    expect(server.tool).toHaveBeenCalledWith(
+      'vmix_inspect_input',
       expect.any(String),
       expect.any(Object),
       expect.any(Function)
@@ -204,7 +211,7 @@ describe('tool registry modes', () => {
 
     registerAllTools(server, ctx);
 
-    expect(server.tool).toHaveBeenCalledTimes(109);
+    expect(server.tool).toHaveBeenCalledTimes(110);
     expect(server.tool).toHaveBeenCalledWith(
       'vmix_switch_cut',
       expect.any(String),
@@ -229,7 +236,7 @@ describe('tool registry modes', () => {
 
     registerAllTools(server, ctx);
 
-    expect(server.tool).toHaveBeenCalledTimes(135);
+    expect(server.tool).toHaveBeenCalledTimes(136);
     expect(server.tool).toHaveBeenCalledWith(
       'vmix_batch',
       expect.any(String),

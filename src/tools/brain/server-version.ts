@@ -57,6 +57,9 @@ async function buildServerVersionInfo(ctx: ToolContext) {
       connected: vmixConnected,
       version: vmixVersion,
       edition: vmixEdition,
+      currentInputQuestionGuidance: vmixConnected
+        ? 'Use live-state tools such as vmix_inspect_input first for current input questions. For saved-only preset evidence, prefer an absolute .vmix path on the CueScope server host; chat attachments may not be server-readable.'
+        : 'For current input questions, run vmix_connection_test before asking for a saved .vmix file. Ask for an absolute .vmix path on the CueScope server host only for last-saved preset evidence or saved-only scripts, triggers, data sources, and drift checks; raw XML content is a fallback.',
     },
     capabilities: {
       tools: activeTools.length,

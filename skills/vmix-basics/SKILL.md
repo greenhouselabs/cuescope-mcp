@@ -12,7 +12,9 @@ Use these default tools first:
 |------|---------|
 | `vmix_analyze_preset` | Summarize active, preview, inputs, overlays, and risks |
 | `vmix_find_input` | Resolve exact input references before planning |
+| `vmix_inspect_input` | Use first for "what is Input X" or current input questions; requests saved `.vmix` evidence only for saved-only details |
 | `vmix_explain_input` | Explain an input's role, state, fields, and audio |
+| `vmix_audit_preset_file` | With `targetInput`, summarize saved own triggers plus inbound trigger/script references for one input |
 | `vmix_generate_api_sequence` | Build a reviewable transition or overlay command plan |
 | `vmix_compare_xml_snapshots` | Explain before/after state changes |
 
@@ -45,7 +47,11 @@ Inputs can be referenced by:
 - Exact title/name: `"Camera 1"`.
 - Stable key/GUID when available.
 
-Input names are case-sensitive. Prefer `vmix_find_input` and `vmix_explain_input` before generating scripts or API plans.
+Input names are case-sensitive. Prefer `vmix_inspect_input`, `vmix_find_input`, and `vmix_explain_input` before generating scripts or API plans.
+
+For current input questions, use live state first. Ask for an explicit saved `.vmix` path on the CueScope server host only when the user needs stored scripts, input triggers, GT/title countdown settings, data-source bindings, or saved-vs-live drift. Raw XML content is a fallback when a server-visible path is unavailable; chat-uploaded attachments may not be readable by the MCP server.
+
+For one-input saved-preset follow-ups, prefer compact/targeted tools before broad script review: use `vmix_read_preset_file` summary for title countdown/data-source bindings, and `vmix_audit_preset_file` with `targetInput` for own triggers, inbound trigger references, and scripts that reference the input. Use full script detail or `vmix_explain_preset_scripts` only when exact script bodies, validation, or rewrite guidance is requested.
 
 ## Review-First Patterns
 
@@ -56,6 +62,15 @@ Input names are case-sensitive. Prefer `vmix_find_input` and `vmix_explain_input
 2. Identify active and preview inputs.
 3. Explain what each input likely represents.
 4. Flag any unexpected state such as FTB, missing audio, or wrong mix.
+```
+
+### Explain One Input
+
+```text
+1. Use vmix_inspect_input for the requested input number, key, or title.
+2. Answer visible live-state details directly.
+3. If the user asks what drives a field, stored trigger, title countdown, data-source binding, or script behavior, ask first for an explicit .vmix path on the CueScope server host. Use raw XML content only as a fallback.
+4. Once a saved preset path is supplied, use summary/targeted saved-preset outputs before full script bodies. Escalate to full script review only when the targeted evidence is insufficient or the user asks for exact script logic.
 ```
 
 ### Plan Preview-Then-Take

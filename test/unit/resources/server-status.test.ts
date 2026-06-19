@@ -22,6 +22,7 @@ const REVIEW_TOOL_NAMES = [
   'vmix_analyze_preset',
   'vmix_generate_show_checklist',
   'vmix_find_input',
+  'vmix_inspect_input',
   'vmix_explain_input',
   'vmix_diagnose_audio',
   'vmix_diagnose_outputs',
@@ -74,9 +75,9 @@ describe('vmix://server/status', () => {
     expect(typeof data.server.restartRecommended).toBe('boolean');
     expect(data.controlMode).toBe(false);
     expect(data.highImpactMode).toBe(false);
-    expect(data.tools.active).toBe(18);
+    expect(data.tools.active).toBe(19);
     expect(data.tools.activeNames).toEqual(REVIEW_TOOL_NAMES);
-    expect(data.tools.review).toBe(18);
+    expect(data.tools.review).toBe(19);
     expect(data.tools.reviewNames).toEqual(REVIEW_TOOL_NAMES);
     expect(data.tools.controlAvailable).toBe(117);
     expect(data.tools.controlSafeAvailable).toBe(91);
@@ -120,8 +121,8 @@ describe('vmix://server/status', () => {
     expect(data.modeLabel).toBe('Control Mode');
     expect(data.controlMode).toBe(true);
     expect(data.highImpactMode).toBe(false);
-    expect(data.tools.active).toBe(109);
-    expect(data.tools.review).toBe(18);
+    expect(data.tools.active).toBe(110);
+    expect(data.tools.review).toBe(19);
     expect(data.tools.controlAvailable).toBe(117);
     expect(data.safety.scriptExecutionToolsActive).toBe(false);
     expect(data.safety.executionBoundary.controlMode.canExecuteScripts).toBe(false);
@@ -136,7 +137,7 @@ describe('vmix://server/status', () => {
     expect(data.modeLabel).toBe('High-Impact Control');
     expect(data.controlMode).toBe(true);
     expect(data.highImpactMode).toBe(true);
-    expect(data.tools.active).toBe(135);
+    expect(data.tools.active).toBe(136);
     expect(data.safety.scriptExecutionToolsActive).toBe(true);
     expect(data.safety.executionBoundary.controlMode.canExecuteScripts).toBe(true);
     expect(data.safety.executionBoundary.controlMode.highImpactToolsActive).toBe(true);
