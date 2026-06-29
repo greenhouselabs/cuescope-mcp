@@ -5,7 +5,7 @@
  */
 import { BUILD_SHA } from './generated/build-info.js';
 
-export const SERVER_VERSION = '1.0.2';
+export const SERVER_VERSION = '1.0.3';
 
 export const SERVER_PACKAGE_NAME = '@greenhouselabs/cuescope-mcp';
 
