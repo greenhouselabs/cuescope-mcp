@@ -1592,7 +1592,8 @@ export const validateScriptTool = createTool({
   name: 'vmix_validate_script',
   description:
     'Read-only validation for vMix VB.NET scripts. Checks VB.NET gotchas, unsafe loops, vMix function names, ' +
-    'current input references, title fields, audio buses, overlay channels, and show-critical actions without execution.',
+    'current input references, title fields, audio buses, overlay channels, and show-critical actions without execution. ' +
+    'Enforces the single-implicit-procedure rule (no Sub/Function/Class definitions) and flags bare CreateObject.',
   schema: z.object({
     code: z.string().min(1).describe('VB.NET script code to validate. The script is not executed.'),
   }),

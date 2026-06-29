@@ -2285,7 +2285,9 @@ export const generateScriptTool = createTool({
   name: 'vmix_generate_script',
   description:
     'Read-only VB.NET script generator for vMix. Returns a reviewable script artifact with validation, setup steps, ' +
-    'test steps, assumptions, and failure modes. It never executes scripts.',
+    'test steps, assumptions, and failure modes. It never executes scripts. vMix runs a script as a single implicit ' +
+    'procedure: no Sub/Function/Class definitions, Console output is invisible, loops need Sleep(), and bare CreateObject ' +
+    'is unavailable (use Microsoft.VisualBasic.Interaction.CreateObject).',
   schema: z.object({
     goal: z
       .string()

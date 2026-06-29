@@ -41,6 +41,7 @@ export function buildServerInstructions(config: Config): string {
     'For saved .vmix evidence, prefer an absolute path on the machine running CueScope. Chat-uploaded attachments may not be readable by the MCP server; raw XML content is only a fallback, especially for smaller presets.',
     'For one-input saved-preset questions, use compact/targeted summaries first: vmix_read_preset_file summary for title metadata and data-source bindings, vmix_audit_preset_file with targetInput for trigger/script references. Use full script reviews only when raw script logic, validation, or rewrite guidance is requested.',
     'If live state is unavailable for a current input question, run vmix_connection_test before asking for a saved .vmix file unless the user explicitly wants last-saved preset evidence.',
+    'When generating or reviewing vMix VB.NET scripts: the host runs each script as a single implicit procedure (no Sub/Function/Class definitions), Console output is invisible, every unbounded loop needs Sleep(), and bare CreateObject is unavailable (use Microsoft.VisualBasic.Interaction.CreateObject). See knowledge/patterns/scripting/vmix-host-constraints.md.',
   ].join('\n');
 }
 
