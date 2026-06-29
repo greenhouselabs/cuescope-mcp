@@ -358,6 +358,40 @@ describe('validateVmixScript', () => {
 
       expect(result.valid).toBe(true);
     });
+
+    it('accepts an advanced inlined single-procedure script', () => {
+      const script = `
+' Aspect-fit watcher - single implicit procedure, no Sub/Function.
+Dim lastKey As String = ""
+Dim pollMs As Integer = 250
+
+Do While True
+    Try
+        Dim xml As String = API.XML()
+        If xml <> "" Then
+            Dim doc As New System.Xml.XmlDocument
+            doc.LoadXml(xml)
+            Dim node As System.Xml.XmlNode = doc.SelectSingleNode("//input[@key='abc']")
+            If node IsNot Nothing Then
+                Dim ratio As String = "16x9"
+                Select Case ratio
+                    Case "16x9"
+                        API.Function("SetText", Input:="abc", SelectedName:="Label.Text", Value:="Wide")
+                    Case Else
+                        API.Function("SetText", Input:="abc", SelectedName:="Label.Text", Value:="Tall")
+                End Select
+            End If
+        End If
+    Catch ex As Exception
+        ' Keep running through transient read errors.
+    End Try
+    Sleep(pollMs)
+Loop
+      `;
+      const result = validateVmixScript(script);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
   });
 });
 
