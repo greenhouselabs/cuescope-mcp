@@ -83,6 +83,30 @@ const PROCEDURE_END =
   /^\s*End\s+(?:Sub|Function|Module|Class|Structure|Namespace|Property|Enum|Interface)\b/i;
 
 /**
+ * Strip only a trailing VB ' comment from a line, leaving string literals
+ * intact. Used by checks (like + concatenation) that must still see the quote
+ * characters around string operands.
+ */
+function stripCommentOnly(line: string): string {
+  let inString = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inString && line[i + 1] === '"') {
+        i++; // escaped "" inside a string
+        continue;
+      }
+      inString = !inString;
+      continue;
+    }
+    if (ch === "'" && !inString) {
+      return line.slice(0, i);
+    }
+  }
+  return line;
+}
+
+/**
  * Script validation result
  */
 export interface ScriptValidationResult {
@@ -130,7 +154,7 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   }
 
   // Thread.Sleep instead of Sleep
-  if (/Thread\.Sleep/i.test(script)) {
+  if (strippedLines.some((line) => /Thread\.Sleep/i.test(line))) {
     errors.push(
       'Use Sleep() instead of Thread.Sleep(). ' +
         'vMix scripts use Sleep() directly: Sleep(1000) for 1 second.'
@@ -155,7 +179,7 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   }
 
   // C# variable declaration
-  if (/\bvar\s+\w+\s*=/.test(script)) {
+  if (strippedLines.some((line) => /\bvar\s+\w+\s*=/.test(line))) {
     errors.push(
       'Use Dim for variable declarations, not var. ' +
         'VB.NET syntax: Dim x As String = "value"'
@@ -173,8 +197,9 @@ export function validateVmixScript(script: string): ScriptValidationResult {
     const matches = script.match(pattern);
     if (matches) {
       for (const loop of matches) {
-        // Check if the loop contains Sleep
-        if (!/Sleep\s*\(/i.test(loop)) {
+        // Ignore Sleep mentioned only inside a comment or string.
+        const loopCode = loop.split('\n').map(stripStringsAndComments).join('\n');
+        if (!/Sleep\s*\(/i.test(loopCode)) {
           errors.push(
             'Infinite loop found without Sleep() - THIS WILL FREEZE vMix! ' +
               'Always include Sleep(100) or similar in loops: Do While True ... Sleep(100) ... Loop'
@@ -208,8 +233,10 @@ export function validateVmixScript(script: string): ScriptValidationResult {
 
   // String concatenation with + instead of &
   // Only warn if we see string + string or string + variable patterns
-  // Don't warn about numeric + operations
-  if (/"\s*\+\s*"/.test(script) || /"\s*\+\s*[a-zA-Z]/.test(script)) {
+  // Don't warn about numeric + operations. Comments are stripped but string
+  // literals are kept, because this check must see the quotes around operands.
+  const codeLines = script.split('\n').map(stripCommentOnly);
+  if (codeLines.some((line) => /"\s*\+\s*"/.test(line) || /"\s*\+\s*[a-zA-Z]/.test(line))) {
     warnings.push(
       'Consider using & for string concatenation instead of +. ' +
         'VB.NET prefers: "Hello " & name (not "Hello " + name)'
@@ -253,7 +280,7 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   }
 
   // Very long Sleep that might be a mistake
-  const sleepMatch = script.match(/Sleep\s*\(\s*(\d+)\s*\)/);
+  const sleepMatch = strippedLines.join('\n').match(/Sleep\s*\(\s*(\d+)\s*\)/);
   if (sleepMatch && parseInt(sleepMatch[1] ?? '0', 10) > 60000) {
     warnings.push(
       `Sleep(${sleepMatch[1]}) is very long (over 60 seconds). ` +
@@ -262,7 +289,7 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   }
 
   // Using Console.WriteLine (won't work in vMix)
-  if (/Console\.Write/i.test(script)) {
+  if (strippedLines.some((line) => /Console\.Write/i.test(line))) {
     warnings.push(
       'Console.WriteLine does not produce visible output in vMix scripts. ' +
         'Consider using API.Function("SetText", ...) to display debug info.'

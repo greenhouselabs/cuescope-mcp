@@ -241,6 +241,56 @@ describe('validateVmixScript', () => {
     });
   });
 
+  describe('comment and string safety', () => {
+    it('does not flag Console.WriteLine mentioned only in a comment', () => {
+      const script = `
+        ' debug note: do not use Console.WriteLine here
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.warnings.some((w) => w.includes('Console'))).toBe(false);
+    });
+
+    it('does not flag Thread.Sleep or var inside a comment', () => {
+      const script = `
+        ' avoid Thread.Sleep and var in C#
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors).toHaveLength(0);
+    });
+
+    it('does not warn about + concatenation that appears only in a comment', () => {
+      const script = `
+        ' build a label like "Hello " + name in C#
+        Dim greeting As String = "Hello " & name
+        Sleep(100)
+      `;
+      const result = validateVmixScript(script);
+      expect(result.warnings.some((w) => w.includes('&'))).toBe(false);
+    });
+
+    it('still warns about real + concatenation outside comments', () => {
+      const script = `
+        Dim greeting As String = "Hello " + name
+        Sleep(100)
+      `;
+      const result = validateVmixScript(script);
+      expect(result.warnings.some((w) => w.includes('&'))).toBe(true);
+    });
+
+    it('flags a loop whose only Sleep is inside a comment as a freeze risk', () => {
+      const script = `
+        Do While True
+          API.Function("Cut", Input:="1")
+          ' add Sleep(100) here later
+        Loop
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors.some((e) => e.includes('FREEZE'))).toBe(true);
+    });
+  });
+
   describe('valid scripts', () => {
     it('accepts correct VB.NET syntax', () => {
       const script = `
