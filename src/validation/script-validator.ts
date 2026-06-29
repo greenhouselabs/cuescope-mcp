@@ -296,6 +296,17 @@ export function validateVmixScript(script: string): ScriptValidationResult {
     );
   }
 
+  // Bare CreateObject does not compile in the vMix host (BC30451): the host does
+  // not import Microsoft.VisualBasic. The qualified form and reflection do work.
+  if (strippedLines.some((line) => /(?<![.\w])CreateObject\s*\(/i.test(line))) {
+    warnings.push(
+      'Bare CreateObject(...) is not available in the vMix scripting host ' +
+        '(it does not import Microsoft.VisualBasic). Use ' +
+        'Microsoft.VisualBasic.Interaction.CreateObject(...) or ' +
+        'Type.GetTypeFromProgID(...) with Activator.CreateInstance(...).'
+    );
+  }
+
   return {
     valid: errors.length === 0,
     errors,

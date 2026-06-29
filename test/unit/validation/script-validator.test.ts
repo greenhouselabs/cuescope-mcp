@@ -239,6 +239,28 @@ describe('validateVmixScript', () => {
       expect(result.valid).toBe(true);
       expect(result.warnings.some((w) => w.includes('Console'))).toBe(true);
     });
+
+    it('warns on bare CreateObject (not declared in vMix host)', () => {
+      const script = `
+        Dim sh As Object = CreateObject("WScript.Shell")
+        Sleep(100)
+      `;
+      const result = validateVmixScript(script);
+      expect(
+        result.warnings.some((w) => w.includes('Microsoft.VisualBasic.Interaction.CreateObject'))
+      ).toBe(true);
+    });
+
+    it('does not warn on qualified CreateObject', () => {
+      const script = `
+        Dim sh As Object = Microsoft.VisualBasic.Interaction.CreateObject("WScript.Shell")
+        Sleep(100)
+      `;
+      const result = validateVmixScript(script);
+      expect(
+        result.warnings.some((w) => w.includes('Microsoft.VisualBasic.Interaction.CreateObject'))
+      ).toBe(false);
+    });
   });
 
   describe('comment and string safety', () => {
