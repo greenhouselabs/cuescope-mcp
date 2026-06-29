@@ -11,7 +11,7 @@ reliable for a show operator.
 
 Use a short API sequence when the work is a finite list of actions with no
 branching. Use a script when the work needs timing, loops, state polling,
-conditional behavior, latches, helper routines, or reusable show logic.
+conditional behavior, latches, repeated inline blocks, or reusable show logic.
 
 ## Compatibility Levels
 
@@ -44,8 +44,10 @@ Allowed traits:
 - `Dim` variables, typed values, booleans, integers, strings, dates, and XML nodes.
 - Arrays or lists when they reduce real duplication and the syntax is known to
   work in the target vMix scripting host.
-- `For`, `For Each`, `If`, `ElseIf`, `Select Case`, helper functions, and
-  subroutines when they make the script easier to reason about.
+- `For`, `For Each`, `If`, `ElseIf`, `Select Case`, and `Try/Catch` blocks when
+  they make the script easier to reason about. Do NOT define `Sub`/`Function`
+  procedures — vMix runs the script as one implicit procedure (see
+  [vMix Host Constraints](vmix-host-constraints.md)).
 - Thousands of lines when explicit action blocks are safer than compressed logic.
 
 Advanced scripts require stronger review notes, a rehearsal plan, and a clear
@@ -58,7 +60,9 @@ Use this order for complex generated scripts:
 1. Header: purpose, compatibility level, live impact, and rehearsal warning.
 2. Input manifest: input number, title, key, type, and role.
 3. Operator settings: buses, timings, thresholds, overlay channels, and flags.
-4. Helper routines: small, named routines only when they improve clarity.
+4. Reusable inline blocks: comment-delimited regions within the single
+   procedure (vMix has no `Sub`/`Function` — see
+   [vMix Host Constraints](vmix-host-constraints.md)).
 5. Startup checks: optional state reads, latch initialization, and comments.
 6. Main logic: straight-line sequence or loop/state machine.
 7. Cleanup/exit behavior: what happens when the script finishes or is stopped.
@@ -80,6 +84,9 @@ script with clear labels can be better than a fifty-line script that hides the
 show map inside arrays.
 
 ## vMix Compiler Nuance
+
+The vMix host runs each script as a single implicit procedure. See
+[vMix Host Constraints](vmix-host-constraints.md) for the authoritative rules.
 
 `Dim` is correct and should be used for variables.
 
