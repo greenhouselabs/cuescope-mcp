@@ -923,11 +923,16 @@ function validatePollingPatterns(code: string): ScriptIssue[] {
     );
     const apiFunctionCallCount = [...loop.text.matchAll(/API\.Function\s*\(/gi)].length;
     const hasChangeGuard = /\b(?:last|previous|prev)[A-Za-z0-9_]*\b/i.test(loop.text);
-    const sleepMatches = [...loop.text.matchAll(/Sleep\s*\(\s*(\d+)\s*\)/gi)];
+    // Comment- and string-stripped loop body so a Sleep() mentioned only in a
+    // comment cannot satisfy the safety check.
+    const loopCode = loop.text.split(/\r?\n/).map(stripVbStringsAndComments).join('\n');
+    const numericSleepMatches = [...loopCode.matchAll(/Sleep\s*\(\s*(\d+)\s*\)/gi)];
+    const hasVariableSleep = /Sleep\s*\(\s*[A-Za-z_]\w*\s*\)/.test(loopCode);
+    const hasSleep = numericSleepMatches.length > 0 || hasVariableSleep;
 
     if (!isStatePolling && !isTimePolling && highImpactFunctionNames.length === 0) continue;
 
-    if (sleepMatches.length === 0) {
+    if (!hasSleep) {
       issues.push({
         severity: 'error',
         category: 'polling',
@@ -941,7 +946,20 @@ function validatePollingPatterns(code: string): ScriptIssue[] {
       continue;
     }
 
-    for (const sleepMatch of sleepMatches) {
+    if (hasVariableSleep && numericSleepMatches.length === 0) {
+      issues.push({
+        severity: 'info',
+        category: 'polling',
+        line: loop.line,
+        message: 'Polling loop uses a variable Sleep interval that cannot be checked statically.',
+        detail: 'The loop calls Sleep() with a variable instead of a numeric literal.',
+        evidence: ['Sleep() is called with an identifier rather than a numeric literal.'],
+        recommendation: 'Confirm the Sleep interval variable always resolves to a value greater than 0.',
+        confidence: 0.8,
+      });
+    }
+
+    for (const sleepMatch of numericSleepMatches) {
       const sleepMs = parseInt(sleepMatch[1] ?? '0', 10);
       if (sleepMs > 0 && sleepMs < 50) {
         issues.push({
