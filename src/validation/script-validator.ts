@@ -70,6 +70,19 @@ function stripStringsAndComments(line: string): string {
 }
 
 /**
+ * Matches a VB.NET procedure or type *definition* at the start of a line
+ * (optionally preceded by access/scope modifiers). vMix runs a script as a
+ * single implicit procedure, so none of these can appear. `Exit Sub` /
+ * `Exit Function` and inline `Function(...)` lambdas do not match because they
+ * never begin a line with the bare keyword.
+ */
+const PROCEDURE_DEF =
+  /^\s*(?:(?:Public|Private|Friend|Protected|Shared|Overloads|Overrides|Overridable|MustOverride|NotOverridable|Partial|Default|Iterator|Async)\s+)*(?:Sub|Function|Module|Class|Structure|Namespace|Property|Enum|Interface)\b/i;
+
+const PROCEDURE_END =
+  /^\s*End\s+(?:Sub|Function|Module|Class|Structure|Namespace|Property|Enum|Interface)\b/i;
+
+/**
  * Script validation result
  */
 export interface ScriptValidationResult {
@@ -96,9 +109,25 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
+  // Comment- and string-stripped view of each line. Definition, operator, and
+  // keyword scans run against this so tokens inside strings or ' comments do
+  // not produce false positives.
+  const strippedLines = script.split('\n').map(stripStringsAndComments);
+
   // ==========================================================================
   // ERRORS - Script will fail or cause problems
   // ==========================================================================
+
+  // vMix runs a script as one implicit procedure: Sub/Function/Module/Class/etc.
+  // definitions (and their matching End ... lines) cannot compile in the host.
+  if (strippedLines.some((line) => PROCEDURE_DEF.test(line) || PROCEDURE_END.test(line))) {
+    errors.push(
+      'vMix scripts run as a single implicit procedure — remove Sub, Function, ' +
+        'Module, Class, Structure, Namespace, Property, Enum, and Interface ' +
+        'definitions (and their matching End ... lines). Inline all logic; repeat ' +
+        'code or use loops instead of helper routines.'
+    );
+  }
 
   // Thread.Sleep instead of Sleep
   if (/Thread\.Sleep/i.test(script)) {
@@ -111,8 +140,6 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   // C# comparison operators instead of VB.NET.
   // Scan with string literals and comments stripped so `If a = "==" Then`
   // or commented-out C# does not flag, while `x=="y"` (no spaces) does.
-  const strippedLines = script.split('\n').map(stripStringsAndComments);
-
   if (strippedLines.some((line) => line.includes('=='))) {
     errors.push(
       'Use = for equality comparison, not ==. ' +

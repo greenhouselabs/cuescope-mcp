@@ -155,6 +155,54 @@ describe('validateVmixScript', () => {
       expect(result.valid).toBe(false);
       expect(result.errors.length).toBeGreaterThanOrEqual(3);
     });
+
+    it('rejects Sub/End Sub definitions', () => {
+      const script = `
+        Sub DoThing()
+          API.Function("Cut")
+        End Sub
+      `;
+      const result = validateVmixScript(script);
+      expect(result.valid).toBe(false);
+      expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(true);
+    });
+
+    it('rejects Function definitions and Module/Class types', () => {
+      for (const head of ['Function F() As Integer', 'Module M', 'Class C', 'Public Function G()']) {
+        const result = validateVmixScript(`${head}\n  API.Function("Cut")\n`);
+        expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(true);
+      }
+    });
+
+    it('does not flag Exit Sub / Exit Function (valid early exit)', () => {
+      const script = `
+        If True Then
+          Exit Sub
+        End If
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(false);
+    });
+
+    it('does not flag inline Function(...) lambdas', () => {
+      const script = `
+        Dim square = Function(n As Integer) n * n
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(false);
+    });
+
+    it('does not flag End Sub inside a string or comment', () => {
+      const script = `
+        ' remember: no End Sub allowed
+        Dim note As String = "End Sub"
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(false);
+    });
   });
 
   describe('warnings', () => {
