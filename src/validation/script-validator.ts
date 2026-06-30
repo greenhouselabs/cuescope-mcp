@@ -70,6 +70,43 @@ function stripStringsAndComments(line: string): string {
 }
 
 /**
+ * Matches a VB.NET procedure or type *definition* at the start of a line
+ * (optionally preceded by access/scope modifiers). vMix runs a script as a
+ * single implicit procedure, so none of these can appear. `Exit Sub` /
+ * `Exit Function` and inline `Function(...)` lambdas do not match because they
+ * never begin a line with the bare keyword.
+ */
+const PROCEDURE_DEF =
+  /^\s*(?:(?:Public|Private|Friend|Protected|Shared|Overloads|Overrides|Overridable|MustOverride|NotOverridable|Partial|Default|Iterator|Async)\s+)*(?:Sub|Function|Module|Class|Structure|Namespace|Property|Enum|Interface)\b/i;
+
+const PROCEDURE_END =
+  /^\s*End\s+(?:Sub|Function|Module|Class|Structure|Namespace|Property|Enum|Interface)\b/i;
+
+/**
+ * Strip only a trailing VB ' comment from a line, leaving string literals
+ * intact. Used by checks (like + concatenation) that must still see the quote
+ * characters around string operands.
+ */
+function stripCommentOnly(line: string): string {
+  let inString = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inString && line[i + 1] === '"') {
+        i++; // escaped "" inside a string
+        continue;
+      }
+      inString = !inString;
+      continue;
+    }
+    if (ch === "'" && !inString) {
+      return line.slice(0, i);
+    }
+  }
+  return line;
+}
+
+/**
  * Script validation result
  */
 export interface ScriptValidationResult {
@@ -96,12 +133,28 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
+  // Comment- and string-stripped view of each line. Definition, operator, and
+  // keyword scans run against this so tokens inside strings or ' comments do
+  // not produce false positives.
+  const strippedLines = script.split('\n').map(stripStringsAndComments);
+
   // ==========================================================================
   // ERRORS - Script will fail or cause problems
   // ==========================================================================
 
+  // vMix runs a script as one implicit procedure: Sub/Function/Module/Class/etc.
+  // definitions (and their matching End ... lines) cannot compile in the host.
+  if (strippedLines.some((line) => PROCEDURE_DEF.test(line) || PROCEDURE_END.test(line))) {
+    errors.push(
+      'vMix scripts run as a single implicit procedure — remove Sub, Function, ' +
+        'Module, Class, Structure, Namespace, Property, Enum, and Interface ' +
+        'definitions (and their matching End ... lines). Inline all logic; repeat ' +
+        'code or use loops instead of helper routines.'
+    );
+  }
+
   // Thread.Sleep instead of Sleep
-  if (/Thread\.Sleep/i.test(script)) {
+  if (strippedLines.some((line) => /Thread\.Sleep/i.test(line))) {
     errors.push(
       'Use Sleep() instead of Thread.Sleep(). ' +
         'vMix scripts use Sleep() directly: Sleep(1000) for 1 second.'
@@ -111,8 +164,6 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   // C# comparison operators instead of VB.NET.
   // Scan with string literals and comments stripped so `If a = "==" Then`
   // or commented-out C# does not flag, while `x=="y"` (no spaces) does.
-  const strippedLines = script.split('\n').map(stripStringsAndComments);
-
   if (strippedLines.some((line) => line.includes('=='))) {
     errors.push(
       'Use = for equality comparison, not ==. ' +
@@ -128,7 +179,7 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   }
 
   // C# variable declaration
-  if (/\bvar\s+\w+\s*=/.test(script)) {
+  if (strippedLines.some((line) => /\bvar\s+\w+\s*=/.test(line))) {
     errors.push(
       'Use Dim for variable declarations, not var. ' +
         'VB.NET syntax: Dim x As String = "value"'
@@ -146,8 +197,9 @@ export function validateVmixScript(script: string): ScriptValidationResult {
     const matches = script.match(pattern);
     if (matches) {
       for (const loop of matches) {
-        // Check if the loop contains Sleep
-        if (!/Sleep\s*\(/i.test(loop)) {
+        // Ignore Sleep mentioned only inside a comment or string.
+        const loopCode = loop.split('\n').map(stripStringsAndComments).join('\n');
+        if (!/Sleep\s*\(/i.test(loopCode)) {
           errors.push(
             'Infinite loop found without Sleep() - THIS WILL FREEZE vMix! ' +
               'Always include Sleep(100) or similar in loops: Do While True ... Sleep(100) ... Loop'
@@ -181,8 +233,10 @@ export function validateVmixScript(script: string): ScriptValidationResult {
 
   // String concatenation with + instead of &
   // Only warn if we see string + string or string + variable patterns
-  // Don't warn about numeric + operations
-  if (/"\s*\+\s*"/.test(script) || /"\s*\+\s*[a-zA-Z]/.test(script)) {
+  // Don't warn about numeric + operations. Comments are stripped but string
+  // literals are kept, because this check must see the quotes around operands.
+  const codeLines = script.split('\n').map(stripCommentOnly);
+  if (codeLines.some((line) => /"\s*\+\s*"/.test(line) || /"\s*\+\s*[a-zA-Z]/.test(line))) {
     warnings.push(
       'Consider using & for string concatenation instead of +. ' +
         'VB.NET prefers: "Hello " & name (not "Hello " + name)'
@@ -226,7 +280,7 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   }
 
   // Very long Sleep that might be a mistake
-  const sleepMatch = script.match(/Sleep\s*\(\s*(\d+)\s*\)/);
+  const sleepMatch = strippedLines.join('\n').match(/Sleep\s*\(\s*(\d+)\s*\)/);
   if (sleepMatch && parseInt(sleepMatch[1] ?? '0', 10) > 60000) {
     warnings.push(
       `Sleep(${sleepMatch[1]}) is very long (over 60 seconds). ` +
@@ -235,10 +289,21 @@ export function validateVmixScript(script: string): ScriptValidationResult {
   }
 
   // Using Console.WriteLine (won't work in vMix)
-  if (/Console\.Write/i.test(script)) {
+  if (strippedLines.some((line) => /Console\.Write/i.test(line))) {
     warnings.push(
       'Console.WriteLine does not produce visible output in vMix scripts. ' +
         'Consider using API.Function("SetText", ...) to display debug info.'
+    );
+  }
+
+  // Bare CreateObject does not compile in the vMix host (BC30451): the host does
+  // not import Microsoft.VisualBasic. The qualified form and reflection do work.
+  if (strippedLines.some((line) => /(?<![.\w])CreateObject\s*\(/i.test(line))) {
+    warnings.push(
+      'Bare CreateObject(...) is not available in the vMix scripting host ' +
+        '(it does not import Microsoft.VisualBasic). Use ' +
+        'Microsoft.VisualBasic.Interaction.CreateObject(...) or ' +
+        'Type.GetTypeFromProgID(...) with Activator.CreateInstance(...).'
     );
   }
 

@@ -6,6 +6,25 @@ This project follows the spirit of [Keep a Changelog](https://keepachangelog.com
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-06-29
+
+### Fixed
+
+- Script validator now rejects `Sub`/`Function`/`Module`/`Class`/`Structure`/`Namespace`/`Property`/`Enum`/`Interface` definitions: vMix runs a script as a single implicit procedure, so helper-routine definitions cannot compile. `Exit Sub`/`Exit Function` and inline `Function(...)` lambdas remain valid.
+- Validator keyword and operator scans (`Thread.Sleep`, `var`, `+` string concatenation, long `Sleep`, `Console.Write`) no longer false-positive on tokens that appear only inside `'` comments or string literals, and a `Sleep()` mentioned only in a comment no longer hides a freeze-prone loop.
+- State-aware polling validator accepts a variable `Sleep(interval)` (reported as an info item to confirm the interval is greater than 0) instead of falsely erroring that the loop has no `Sleep()`.
+
+### Added
+
+- Validator warns on bare `CreateObject(...)` (which does not compile in the vMix host) and points to `Microsoft.VisualBasic.Interaction.CreateObject(...)` or `Type.GetTypeFromProgID` + `Activator.CreateInstance`.
+- New `knowledge/patterns/scripting/vmix-host-constraints.md` single source of truth for vMix scripting host constraints.
+- Script-validator function allowlist updated to recognize 82 vMix 29 shortcut functions — overlay channels 5–8 (`OverlayInput5..8`, `PreviewOverlayInput5..8`), replay C/D channels and quad mode, stinger 5–8, master/bus volume fades (`SetMasterVolumeFade`, `SetBus{A–G}VolumeFade`), OMT source selection, and video-call connect/reconnect — via a curated vMix 29 supplement merged into the generated allowlist (the upstream `vmix-function-list` package is still at v27). Deeper v29 feature support (8/16 overlay channels, master/bus volume-fade adoption) is tracked for a later release.
+
+### Changed
+
+- vMix scripting knowledge (`complex-script-design.md`, `vbnet-basics.md`) replaces helper-function/subroutine guidance with the single-implicit-procedure rule.
+- `vmix_generate_script` and `vmix_validate_script` tool descriptions and the server instructions state the single-procedure, no-Console-output, and CreateObject constraints up front.
+
 ## [1.0.2] - 2026-06-19
 
 ### Added

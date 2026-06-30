@@ -643,3 +643,53 @@ Loop`;
     expect(messages).not.toContain('Polling loop does not include Sleep');
   });
 });
+
+describe('polling loop Sleep reconciliation', () => {
+  const pollingState = { inputs: [] } as unknown as VmixState; // empty inputs: no input-resolution errors
+
+  it('does not error when a polling loop uses a variable Sleep interval', () => {
+    const code = [
+      'Dim pollMs As Integer = 250',
+      'Do While True',
+      '    Dim xml As String = API.XML()',
+      '    Dim x As New System.Xml.XmlDocument',
+      '    x.LoadXml(xml)',
+      '    Dim active As String = x.SelectSingleNode("//active").InnerText',
+      '    Sleep(pollMs)',
+      'Loop',
+    ].join('\n');
+    const result = validateScriptAgainstState(pollingState, code);
+    expect(
+      result.issues.some((i) => i.category === 'polling' && /does not include Sleep/i.test(i.message))
+    ).toBe(false);
+    expect(
+      result.issues.some((i) => i.severity === 'info' && /variable Sleep interval/i.test(i.message))
+    ).toBe(true);
+  });
+
+  it('still errors when a polling loop has no Sleep at all', () => {
+    const code = [
+      'Do While True',
+      '    Dim xml As String = API.XML()',
+      '    Dim active As String = xml',
+      'Loop',
+    ].join('\n');
+    const result = validateScriptAgainstState(pollingState, code);
+    expect(
+      result.issues.some((i) => i.category === 'polling' && /does not include Sleep/i.test(i.message))
+    ).toBe(true);
+  });
+
+  it('still errors when the only Sleep is inside a comment', () => {
+    const code = [
+      'Do While True',
+      '    Dim active As String = API.XML()',
+      "    ' Sleep(100) belongs here",
+      'Loop',
+    ].join('\n');
+    const result = validateScriptAgainstState(pollingState, code);
+    expect(
+      result.issues.some((i) => i.category === 'polling' && /does not include Sleep/i.test(i.message))
+    ).toBe(true);
+  });
+});

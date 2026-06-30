@@ -155,6 +155,54 @@ describe('validateVmixScript', () => {
       expect(result.valid).toBe(false);
       expect(result.errors.length).toBeGreaterThanOrEqual(3);
     });
+
+    it('rejects Sub/End Sub definitions', () => {
+      const script = `
+        Sub DoThing()
+          API.Function("Cut")
+        End Sub
+      `;
+      const result = validateVmixScript(script);
+      expect(result.valid).toBe(false);
+      expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(true);
+    });
+
+    it('rejects Function definitions and Module/Class types', () => {
+      for (const head of ['Function F() As Integer', 'Module M', 'Class C', 'Public Function G()']) {
+        const result = validateVmixScript(`${head}\n  API.Function("Cut")\n`);
+        expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(true);
+      }
+    });
+
+    it('does not flag Exit Sub / Exit Function (valid early exit)', () => {
+      const script = `
+        If True Then
+          Exit Sub
+        End If
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(false);
+    });
+
+    it('does not flag inline Function(...) lambdas', () => {
+      const script = `
+        Dim square = Function(n As Integer) n * n
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(false);
+    });
+
+    it('does not flag End Sub inside a string or comment', () => {
+      const script = `
+        ' remember: no End Sub allowed
+        Dim note As String = "End Sub"
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors.some((e) => e.includes('single implicit procedure'))).toBe(false);
+    });
   });
 
   describe('warnings', () => {
@@ -190,6 +238,78 @@ describe('validateVmixScript', () => {
 
       expect(result.valid).toBe(true);
       expect(result.warnings.some((w) => w.includes('Console'))).toBe(true);
+    });
+
+    it('warns on bare CreateObject (not declared in vMix host)', () => {
+      const script = `
+        Dim sh As Object = CreateObject("WScript.Shell")
+        Sleep(100)
+      `;
+      const result = validateVmixScript(script);
+      expect(
+        result.warnings.some((w) => w.includes('Microsoft.VisualBasic.Interaction.CreateObject'))
+      ).toBe(true);
+    });
+
+    it('does not warn on qualified CreateObject', () => {
+      const script = `
+        Dim sh As Object = Microsoft.VisualBasic.Interaction.CreateObject("WScript.Shell")
+        Sleep(100)
+      `;
+      const result = validateVmixScript(script);
+      expect(
+        result.warnings.some((w) => w.includes('Microsoft.VisualBasic.Interaction.CreateObject'))
+      ).toBe(false);
+    });
+  });
+
+  describe('comment and string safety', () => {
+    it('does not flag Console.WriteLine mentioned only in a comment', () => {
+      const script = `
+        ' debug note: do not use Console.WriteLine here
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.warnings.some((w) => w.includes('Console'))).toBe(false);
+    });
+
+    it('does not flag Thread.Sleep or var inside a comment', () => {
+      const script = `
+        ' avoid Thread.Sleep and var in C#
+        API.Function("Cut")
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors).toHaveLength(0);
+    });
+
+    it('does not warn about + concatenation that appears only in a comment', () => {
+      const script = `
+        ' build a label like "Hello " + name in C#
+        Dim greeting As String = "Hello " & name
+        Sleep(100)
+      `;
+      const result = validateVmixScript(script);
+      expect(result.warnings.some((w) => w.includes('&'))).toBe(false);
+    });
+
+    it('still warns about real + concatenation outside comments', () => {
+      const script = `
+        Dim greeting As String = "Hello " + name
+        Sleep(100)
+      `;
+      const result = validateVmixScript(script);
+      expect(result.warnings.some((w) => w.includes('&'))).toBe(true);
+    });
+
+    it('flags a loop whose only Sleep is inside a comment as a freeze risk', () => {
+      const script = `
+        Do While True
+          API.Function("Cut", Input:="1")
+          ' add Sleep(100) here later
+        Loop
+      `;
+      const result = validateVmixScript(script);
+      expect(result.errors.some((e) => e.includes('FREEZE'))).toBe(true);
     });
   });
 
@@ -237,6 +357,40 @@ describe('validateVmixScript', () => {
       const result = validateVmixScript(script);
 
       expect(result.valid).toBe(true);
+    });
+
+    it('accepts an advanced inlined single-procedure script', () => {
+      const script = `
+' Aspect-fit watcher - single implicit procedure, no Sub/Function.
+Dim lastKey As String = ""
+Dim pollMs As Integer = 250
+
+Do While True
+    Try
+        Dim xml As String = API.XML()
+        If xml <> "" Then
+            Dim doc As New System.Xml.XmlDocument
+            doc.LoadXml(xml)
+            Dim node As System.Xml.XmlNode = doc.SelectSingleNode("//input[@key='abc']")
+            If node IsNot Nothing Then
+                Dim ratio As String = "16x9"
+                Select Case ratio
+                    Case "16x9"
+                        API.Function("SetText", Input:="abc", SelectedName:="Label.Text", Value:="Wide")
+                    Case Else
+                        API.Function("SetText", Input:="abc", SelectedName:="Label.Text", Value:="Tall")
+                End Select
+            End If
+        End If
+    Catch ex As Exception
+        ' Keep running through transient read errors.
+    End Try
+    Sleep(pollMs)
+Loop
+      `;
+      const result = validateVmixScript(script);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
     });
   });
 });
