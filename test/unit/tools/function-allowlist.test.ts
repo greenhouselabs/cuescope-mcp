@@ -145,13 +145,47 @@ describe('isAllowlistedVmixFunction', () => {
   it('rejects the broken names from the audit', () => {
     expect(isAllowlistedVmixFunction('AudioBusAOn')).toBe(false);
     expect(isAllowlistedVmixFunction('SetOutputExternal2On')).toBe(false);
-    expect(isAllowlistedVmixFunction('SetMasterVolumeFade')).toBe(false);
-    expect(isAllowlistedVmixFunction('SetBusAVolumeFade')).toBe(false);
     expect(isAllowlistedVmixFunction('DataSourceAutoNextPlay')).toBe(false);
   });
 
   it('rejects unknown and empty names', () => {
     expect(isAllowlistedVmixFunction('NotARealFunction')).toBe(false);
     expect(isAllowlistedVmixFunction('')).toBe(false);
+  });
+
+  it('accepts vMix 29 functions added by the v29 supplement', () => {
+    // Overlay channels 5-8
+    expect(isAllowlistedVmixFunction('OverlayInput5In')).toBe(true);
+    expect(isAllowlistedVmixFunction('OverlayInput8Out')).toBe(true);
+    expect(isAllowlistedVmixFunction('PreviewOverlayInput8')).toBe(true);
+    // Transitions
+    expect(isAllowlistedVmixFunction('Stinger5')).toBe(true);
+    expect(isAllowlistedVmixFunction('SetStingerGTInput1')).toBe(true);
+    // Replay C/D channels + quad mode
+    expect(isAllowlistedVmixFunction('ReplayCCamera1')).toBe(true);
+    expect(isAllowlistedVmixFunction('ReplayDCamera8')).toBe(true);
+    expect(isAllowlistedVmixFunction('ReplayToggleQuadMode')).toBe(true);
+    // Audio volume fades (were previously assumed invalid)
+    expect(isAllowlistedVmixFunction('SetMasterVolumeFade')).toBe(true);
+    expect(isAllowlistedVmixFunction('SetBusAVolumeFade')).toBe(true);
+    expect(isAllowlistedVmixFunction('SetBusGVolumeFade')).toBe(true);
+    // OMT, video call, GO
+    expect(isAllowlistedVmixFunction('OMTSelectSourceByName')).toBe(true);
+    expect(isAllowlistedVmixFunction('ZoomJoinMeeting')).toBe(true);
+    expect(isAllowlistedVmixFunction('VideoCallConnect')).toBe(true);
+    expect(isAllowlistedVmixFunction('GO')).toBe(true);
+  });
+
+  it('still accepts the transition functions a naive regen would drop', () => {
+    for (const fn of ['Cut', 'Fade', 'Wipe', 'WipeReverse', 'Zoom', 'Merge',
+      'Slide', 'Fly', 'FlyRotate', 'Cube', 'CubeZoom', 'CrossZoom',
+      'VerticalWipe', 'VerticalSlide']) {
+      expect(isAllowlistedVmixFunction(fn), fn).toBe(true);
+    }
+  });
+
+  it('still rejects SetLayerN ZoomX/ZoomY (not real vMix functions)', () => {
+    expect(isAllowlistedVmixFunction('SetLayer1ZoomX')).toBe(false);
+    expect(isAllowlistedVmixFunction('SetLayer1ZoomY')).toBe(false);
   });
 });

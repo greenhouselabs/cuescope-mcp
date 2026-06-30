@@ -18,6 +18,7 @@ This project follows the spirit of [Keep a Changelog](https://keepachangelog.com
 
 - Validator warns on bare `CreateObject(...)` (which does not compile in the vMix host) and points to `Microsoft.VisualBasic.Interaction.CreateObject(...)` or `Type.GetTypeFromProgID` + `Activator.CreateInstance`.
 - New `knowledge/patterns/scripting/vmix-host-constraints.md` single source of truth for vMix scripting host constraints.
+- Script-validator function allowlist updated to recognize 82 vMix 29 shortcut functions — overlay channels 5–8 (`OverlayInput5..8`, `PreviewOverlayInput5..8`), replay C/D channels and quad mode, stinger 5–8, master/bus volume fades (`SetMasterVolumeFade`, `SetBus{A–G}VolumeFade`), OMT source selection, and video-call connect/reconnect — via a curated vMix 29 supplement merged into the generated allowlist (the upstream `vmix-function-list` package is still at v27). Deeper v29 feature support (8/16 overlay channels, master/bus volume-fade adoption) is tracked for a later release.
 
 ### Changed
 
