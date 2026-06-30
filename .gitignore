@@ -26,6 +26,9 @@ INTERNAL.md
 BUILD-PLAN.md
 vmix-mcp-documentation/
 
+# Local brainstorming specs and implementation plans (working scratch, not shipped)
+docs/superpowers/
+
 # OS
 .DS_Store
 Thumbs.db
