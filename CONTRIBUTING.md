@@ -50,6 +50,10 @@ node scripts/validate-api-calls.mjs
 npm pack --dry-run
 ```
 
+For the full release and versioning workflow — branching, CHANGELOG, version
+bump, PR, squash-merge, annotated tagging, `npm publish`, and the GitHub release —
+see [RELEASING.md](RELEASING.md).
+
 ## Product Safety Boundaries
 
 Review Mode is the default. It should inspect state, explain what it sees,
