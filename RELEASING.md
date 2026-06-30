@@ -5,6 +5,14 @@ This is the documented, repeatable process — follow it for every feature, fix,
 and release. (CueScope is source-available; this is for the Greenhouse Labs
 maintainer team.)
 
+## Docs and chore changes (no release needed)
+
+Documentation-only and chore changes — `README`, `CONTRIBUTING`, `RELEASING`,
+code comments, CI config, and the like — do **not** need a `release/X.Y.Z`
+branch, a version bump, or a CHANGELOG entry. Commit them straight to `main`
+(or via a quick PR if `main` is branch-protected). Everything below applies only
+when **shipping a new package version to npm**.
+
 ## Versioning
 
 - **SemVer.** `MAJOR.MINOR.PATCH`:
